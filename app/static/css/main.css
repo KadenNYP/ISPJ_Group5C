@@ -1,0 +1,43 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+.container-fluid {
+    padding-top: 40px;
+}
+
+.navbar {
+    background-color: #003366;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    font-size: 2rem;
+    font-weight: bold;
+    color: white !important;
+    transition: transform 0.3s ease-in-out;
+}
+
+.navbar-brand:hover {
+    transform: scale(1.05);
+}
+
+.navbar-nav .nav-link {
+    color: white !important;
+    font-size: 1.1rem;
+    padding: 10px 15px;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.navbar-nav .nav-link:hover {
+    background-color: #00509e;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.nav-item .btn:hover {
+    background-color: #00509e;
+    color: white !important;
+}

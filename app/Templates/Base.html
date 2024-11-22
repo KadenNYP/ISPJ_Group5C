@@ -3,11 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Home{% endblock %}</title>
-    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/static/css/style.css">
+    
 </head>
 
 <body>
+    {% block navbar %}
+
+        {% include 'includes/_navbar.html' %}
+    {% endblock %}
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             {% for category, message in messages %}

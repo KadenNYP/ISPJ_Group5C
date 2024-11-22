@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 pymysql.install_as_MySQLdb()
 
+
 def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'secret'
@@ -17,7 +18,8 @@ def create_app():
 
     return app
 
+
 app = create_app()
 
-app.run(debug=True)
-
+if __name__ == '__main__':
+    app.run(debug=False)

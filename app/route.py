@@ -9,6 +9,7 @@ def before_request():
     else:
         g.user = None"""
 
+
 @route.route('/')
 def index():
-    return render_template("/home/index.html")
+    return render_template("home/index.html")

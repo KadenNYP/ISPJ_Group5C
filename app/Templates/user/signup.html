@@ -3,7 +3,7 @@
 {% block content %}
     <div class="mx-auto bg-white rounded">  
         <div class="form-container">
-            <h1 class="text-center">Sign in with your Ease ID</h1>
+            <h1 class="text-center">Register your Ease-I Account</h1>
             <div class="form w-75 mx-auto">
                 <form autocomplete="off" action="{{ url_for('auth.login')}}" method="POST">
                     <div class="form-top d-grid gap-3">
@@ -12,18 +12,11 @@
                         </div>
                         <div class="w-100">
                             <input id="Password" type="password" autocomplete="off" placeholder="Enter your password here" maxlength="100" class="w-100 border border-solid border-2 rounded border-secondary">
-                        </div>
-                        <div class="text-primary" href="#">Forgot your Password?</div>
-                    </div>
-                    <div class="form-bottom">
-                        <button type="submit" class="btn btn-primary w-100">Continue</button>
-                        <div class="d-flex justify-content-center" href="#">Don't have an account? 
-                            <a class="text-primary pl-1" href="{{ url_for('auth.signup') }}">Sign Up</a>
-                        </div>
+                        </div>   
                     </div>
                 </form>
             </div>
         </div>
-        
-        
+    </div>
+
 {% endblock %}

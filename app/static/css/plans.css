@@ -1,0 +1,52 @@
+.plans-page-container {
+    background-color: #1a6f59;
+    padding: 2rem 0;
+}
+
+.basic-plan {
+    background-color: #e7f3ff;
+}
+
+.standard-plan {
+    background-color: #e6f8e0;
+}
+
+.premium-plan {
+    background-color: #fff9e5;
+}
+
+.btn-basic {
+    background-color: #d6eaff;
+    border: none;
+}
+
+.btn-basic:hover {
+    background-color: #c2e0ff;
+}
+
+.btn-standard {
+    background-color: #dff3d8;
+    border: none;
+}
+
+.btn-standard:hover {
+    background-color: #ccecc5;
+}
+
+.btn-premium {
+    background-color: #ffefcc;
+    border: none;
+}
+
+.btn-premium:hover {
+    background-color: #ffe8b3;
+}
+
+.card-header {
+    font-size: 1.5rem;
+    padding: 1rem;
+}
+
+.card-body {
+    padding: 1.5rem;
+}

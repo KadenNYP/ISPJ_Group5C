@@ -1,7 +1,69 @@
 {% extends "base.html" %}
 
-{% block title %}INSURE-EASE Plans Overview{% endblock %}
+{% block title %}Insurance Plans{% endblock %}
 
 {% block content %}
+<div class="plans-page-container py-5">
+    <div class="container">
+        <h1 class="text-center text-white mb-4">Our Insurance Plans</h1>
+        <p class="text-center text-white mb-5">
+            Choose the plan that best suits your needs. Whether you're looking for essential coverage or comprehensive benefits, we've got you covered.
+        </p>
+        <div class="row">
 
+            <div class="col-md-4">
+                <div class="card shadow-sm border-0">
+                    <div class="card-header basic-plan text-center">
+                        <h4 class="fw-bold mb-0">Basic Plan</h4>
+                    </div>
+                    <div class="card-body text-center">
+                        <p class="card-text text-muted mb-4">Ideal for individuals looking for essential health coverage at an affordable price.</p>
+                        <ul class="list-unstyled mb-4">
+                            <li><i class="bi bi-check-circle text-success"></i> Essential Health Coverage</li>
+                            <li><i class="bi bi-check-circle text-success"></i> Emergency Assistance</li>
+                            <li><i class="bi bi-check-circle text-success"></i> Preventative Care</li>
+                        </ul>
+                        <button class="btn btn-basic w-100">Select Plan</button>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-md-4">
+                <div class="card shadow-sm border-0">
+                    <div class="card-header standard-plan text-center">
+                        <h4 class="fw-bold mb-0">Standard Plan</h4>
+                    </div>
+                    <div class="card-body text-center">
+                        <p class="card-text text-muted mb-4">A balanced plan offering extended coverage for families and individuals.</p>
+                        <ul class="list-unstyled mb-4">
+                            <li><i class="bi bi-check-circle text-success"></i> Comprehensive Health Coverage</li>
+                            <li><i class="bi bi-check-circle text-success"></i> Wellness Benefits</li>
+                            <li><i class="bi bi-check-circle text-success"></i> Dental and Vision Care</li>
+                        </ul>
+                        <button class="btn btn-standard w-100">Select Plan</button>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-md-4">
+                <div class="card shadow-sm border-0">
+                    <div class="card-header premium-plan text-center">
+                        <h4 class="fw-bold mb-0">Premium Plan</h4>
+                    </div>
+                    <div class="card-body text-center">
+                        <p class="card-text text-muted mb-4">Comprehensive coverage with exclusive benefits for complete peace of mind.</p>
+                        <ul class="list-unstyled mb-4">
+                            <li><i class="bi bi-check-circle text-success"></i> Full Health and Wellness Coverage</li>
+                            <li><i class="bi bi-check-circle text-success"></i> VIP Support</li>
+                            <li><i class="bi bi-check-circle text-success"></i> Worldwide Coverage</li>
+                        </ul>
+                        <button class="btn btn-premium w-100">Select Plan</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

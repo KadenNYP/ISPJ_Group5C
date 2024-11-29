@@ -3,6 +3,13 @@
     padding: 2rem 0;
 }
 
+.plans-section {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+}
+
 .basic-plan {
     background-color: #e7f3ff;
 }
@@ -13,6 +20,10 @@
 
 .premium-plan {
     background-color: #fff9e5;
+}
+
+.plus-plan {
+     background-color: #FFE4C4;
 }
 
 .btn-basic {
@@ -40,6 +51,14 @@
 
 .btn-premium:hover {
     background-color: #ffe8b3;
+}
+
+.btn-plus {
+    background-color: #FFE4C4;
+}
+
+.btn-plus:hover {
+    background-color: #FFCC99;
 }
 
 .card-header {

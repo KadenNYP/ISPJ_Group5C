@@ -1,0 +1,99 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='css/contact.css') }}">
+
+{% extends "base.html" %}
+
+{% block title %}Contact Us{% endblock %}
+
+{% block content %}
+<div class="contact-page-container py-5">
+    <div class="container">
+        <h1 class="text-center text-white mb-4">Get in Touch</h1>
+        <p class="text-center text-white mb-5">
+            We're here to help! Contact us through any of the channels below, and we'll get back to you promptly.
+        </p>
+        <div class="row gy-4">
+
+            <div class="col-md-6">
+                <div class="c-card shadow-sm border-0 p-4 h-100">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="bi text-primary fs-3 me-3"></i>
+                        <h5 class="mb-0 text-align">Our Office</h5>
+                    </div>
+                    <p class="mb-0 text-muted">
+                        123 Robinson Road, <br>
+                        #12-01 Robinson 123, <br>
+                        Singapore 6891904
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="c-card shadow-sm border-0 p-4 h-100">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="bi text-primary fs-3 me-3"></i>
+                        <h5 class="mb-0">Call Us</h5>
+                    </div>
+                    <p class="mb-0 text-muted">
+                        +65 6234 5875 (Mon - Fri: 9:00 AM - 6:00 PM)
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="c-card shadow-sm border-0 p-4 h-100">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="bi text-primary fs-3 me-3"></i>
+                        <h5 class="mb-0">Email Us</h5>
+                    </div>
+                    <p class="mb-0 text-muted">
+                        support@insureease.sg
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="c-card shadow-sm border-0 p-4 h-100">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="bi text-primary fs-3 me-3"></i>
+                        <h5 class="mb-0">Working Hours</h5>
+                    </div>
+                    <p class="mb-0 text-muted">
+                        Mon - Fri: 9:00 AM - 6:00 PM <br>
+                        Sat: 9:00 AM - 1:00 PM <br>
+                        Closed on Sundays and Public Holidays
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <hr class="my-5">
+
+        <div class="c-form shadow-lg border-0 p-5">
+            <h2 class="text-center text-primary mb-4">Send Us a Message</h2>
+            <form autocomplete="off" action=" " method="POST">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="name" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Your Full Name" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Your Email Address" required>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="subject" class="form-label">Subject</label>
+                    <input type="text" class="form-control" id="subject" name="subject" placeholder="Subject of Your Inquiry" required>
+                </div>
+                <div class="mb-3">
+                    <label for="message" class="form-label">Message</label>
+                    <textarea class="form-control" id="message" name="message" rows="5" placeholder="Type your message here" required></textarea>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary btn-lg px-4">Send Message</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

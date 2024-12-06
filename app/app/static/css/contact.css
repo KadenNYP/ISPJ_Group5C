@@ -1,0 +1,47 @@
+.contact-page-container {
+    background-color: #1a6f59;
+    padding: 3rem 0;
+}
+
+.c-card {
+    background-color: #f8f9fa !important;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.c-card:hover {
+    background-color: #f4f4f4 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+    transform: translateY(-5px);
+}
+
+.bi {
+    flex-shrink: 0;
+}
+
+.btn-primary {
+    background-color: #1a6f59;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #155e4a;
+}
+
+
+.c-form {
+    background-color: #f8f9fa !important;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+    transition: all 0.3s ease;
+}
+
+.c-form:hover {
+    background-color: #f4f4f4 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+    transform: translateY(-5px) !important;
+}

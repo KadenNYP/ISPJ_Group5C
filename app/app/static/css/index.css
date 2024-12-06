@@ -1,0 +1,46 @@
+.hero {
+    background: linear-gradient(to bottom, #1a6f59, #2c8c6d);
+    height: 500px;
+}
+
+.hero .container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.about-us-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem 1rem;
+}
+
+.features {
+    background-color: #f8f9fa;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+}
+
+.features h2 {
+    font-size: 2rem;
+}
+
+.features .col-md-4:hover i {
+    transform: scale(1.1);
+    transition: transform 0.3s;
+}
+
+.btn-light {
+    background-color: #f8f9fa;
+    color: #2c8c6d;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+}

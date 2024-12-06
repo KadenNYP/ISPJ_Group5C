@@ -1,5 +1,5 @@
 .plans-page-container {
-    background-color: #1a6f59;
+    background-color: #1a6f59 !important;
     padding: 2rem 0;
 }
 
@@ -11,36 +11,36 @@
 }
 
 .basic-plan {
-    background-color: #e7f3ff;
+    background-color: #e7f3ff !important;
 }
 
 .standard-plan {
-    background-color: #e6f8e0;
+    background-color: #e6f8e0 !important;
 }
 
 .premium-plan {
-    background-color: #fff9e5;
+    background-color: #fff9e5 !important;
 }
 
 .plus-plan {
-     background-color: #FFE4C4;
+     background-color: #FFE4C4 !important;
 }
 
 .btn-basic {
-    background-color: #d6eaff;
+    background-color: #d6eaff !important;
     border: none;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
     transition: all 0.3s ease;
 }
 
 .btn-basic:hover {
-    background-color: #c2e0ff;
+    background-color: #c2e0ff !important;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
     transform: translateY(-5px);
 }
 
 .btn-standard {
-    background-color: #dff3d8;
+    background-color: #dff3d8 !important;
     border: none;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
     transition: all 0.3s ease;
@@ -53,7 +53,7 @@
 }
 
 .btn-premium {
-    background-color: #ffefcc;
+    background-color: #ffefcc !important;
     border: none;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
     transition: all 0.3s ease;
@@ -66,7 +66,7 @@
 }
 
 .btn-plus {
-    background-color: #FFE4C4;
+    background-color: #FFE4C4 !important;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
     transition: all 0.3s ease;
 }

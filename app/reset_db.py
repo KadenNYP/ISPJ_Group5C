@@ -23,10 +23,10 @@ try:
     my_cursor.execute('''
     CREATE TABLE user (
         id INT AUTO_INCREMENT PRIMARY KEY,
-        email VARCHAR(150) UNIQUE NOT NULL,
-        password VARCHAR(150) NOT NULL,
         first_name VARCHAR(150) NOT NULL,
         last_name VARCHAR(150) NOT NULL,
+        email VARCHAR(150) UNIQUE NOT NULL,
+        password VARCHAR(150) NOT NULL,
         failed_login_attempts INT DEFAULT 0 NOT NULL,
         lockout_time DATETIME DEFAULT NULL,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,

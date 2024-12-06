@@ -1,8 +1,9 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_user, login_required, logout_user, current_user
-from models import User, db
+from .models import User
 from werkzeug.security import generate_password_hash, check_password_hash 
 from datetime import datetime, timedelta
+from .init import db
 import re 
 
 auth = Blueprint('auth', __name__)
@@ -19,8 +20,9 @@ def is_valid_email(email):
 @auth.route('signup', methods=['GET','POST'])
 def signup():
     if request.method == 'POST':
-        email = request.form.get('email')
         first_name = request.form.get('first_name')
+        last_name = request.form.get('last_name')
+        email = request.form.get('email')
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
 
@@ -30,7 +32,7 @@ def signup():
         elif is_valid_email(email) == False:
             flash('Invalid email address.', category='error')
         else:
-            user = User(email=email, first_name=first_name, password=generate_password_hash(password1, method='sha256'))
+            user = User(first_name=first_name, last_name=last_name, email=email, password=generate_password_hash(password1, method='sha256'))
             db.session.add(user)
             db.session.commit()
             login_user(user, remember=True)

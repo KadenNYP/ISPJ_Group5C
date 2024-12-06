@@ -10,17 +10,17 @@ db = SQLAlchemy()
 def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'secret'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:password123@localhost/website'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:password123@localhost/ISPJ'
     db.init_app(app)
 
     
-    from auth import auth as auth_blueprint
-    from route import route as route_blueprint
+    from .auth import auth as auth_blueprint
+    from .route import route as route_blueprint
 
     app.register_blueprint(auth_blueprint, url_prefix='')
     app.register_blueprint(route_blueprint, url_prefix='')
 
-    from models import User
+    from .models import User
 
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'
@@ -31,9 +31,3 @@ def create_app():
         return User.query.get(int(user_id))
 
     return app
-
-
-app = create_app()
-
-if __name__ == '__main__':
-    app.run(debug=False)

@@ -8,16 +8,17 @@ import re
 
 auth = Blueprint('auth', __name__)
 
-#variables
+# variables
 MAX_FAILED_ATTEMPTS = 3
 LOCKOUT_TIME = timedelta(seconds=30)
+
 
 def is_valid_email(email):
     email_address = re.compile(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$')
     return re.match(email_address, email) is not None
 
 
-@auth.route('signup', methods=['GET','POST'])
+@auth.route('signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
         first_name = request.form.get('first_name')
@@ -75,7 +76,7 @@ def login():
         else:
             flash('Email is incorrect.', category='error')
 
-    return render_template('user/login.html', user = current_user)
+    return render_template('user/login.html', user=current_user)
 
 
 @auth.route('logout')

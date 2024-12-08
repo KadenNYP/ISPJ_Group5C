@@ -56,3 +56,8 @@ def ContactSupport():
 @route.route('/essential_plan')
 def Essential_Plan():
     return render_template("Login-home/Essential_Plan.html")
+
+
+@route.route('/enhanced_plan')
+def Enhanced_Plan():
+    return render_template("Login-home/Enhanced_Plan.html")

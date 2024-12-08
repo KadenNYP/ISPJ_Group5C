@@ -10,15 +10,15 @@
     gap: 2rem;
 }
 
-.basic-plan {
+.essential-plan {
     background-color: #e7f3ff !important;
 }
 
-.standard-plan {
+.enhanced-plan {
     background-color: #e6f8e0 !important;
 }
 
-.premium-plan {
+.elite-plan {
     background-color: #fff9e5 !important;
 }
 

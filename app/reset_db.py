@@ -13,12 +13,12 @@ try:
     my_cursor = mydb.cursor()
 
     #Drop the database if it exists
-    my_cursor.execute("DROP DATABASE IF EXISTS ISPJ")
+    my_cursor.execute("DROP DATABASE IF EXISTS website")
 
     #Create the database
-    my_cursor.execute("CREATE DATABASE ISPJ")
+    my_cursor.execute("CREATE DATABASE website")
 
-    my_cursor.execute("USE ISPJ")
+    my_cursor.execute("USE website")
 
     my_cursor.execute('''
     CREATE TABLE user (

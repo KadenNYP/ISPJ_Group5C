@@ -24,21 +24,29 @@ def signup():
         first_name = request.form.get('first_name')
         last_name = request.form.get('last_name')
         email = request.form.get('email')
-        password1 = request.form.get('password1')
-        password2 = request.form.get('password2')
+        password = request.form.get('password')
+        confirm_password = request.form.get('confirm_password')
+        
+        # Debugging
+        print(f"Signup form data: first_name={first_name}, last_name={last_name}, email={email}, password={password}, confirm_password={confirm_password}")
 
         user = User.query.filter_by(email=email).first()
+
+        # Check if the email already exists
         if user:
             flash('Email already exists.', category='error')
         elif is_valid_email(email) == False:
             flash('Invalid email address.', category='error')
+        elif password != confirm_password:
+            flash('Passwords do not match.', category='error')
         else:
-            user = User(first_name=first_name, last_name=last_name, email=email, password=generate_password_hash(password1, method='sha256'))
+            hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
+            user = User(first_name=first_name, last_name=last_name, email=email, password=hashed_password)            
             db.session.add(user)
             db.session.commit()
             login_user(user, remember=True)
             flash('Account created!', category='success')
-            return redirect(url_for('views.home'))
+            return redirect(url_for('route.index'))
 
     return render_template('user/signup.html')
 
@@ -63,7 +71,7 @@ def login():
                 db.session.commit()
                 flash('Logged in successfully!', category='success')
                 login_user(user, remember=True)
-                return redirect(url_for('views.home'))
+                return redirect(url_for('route.index'))
             else:
                 # Increment failed login attempts
                 user.failed_login_attempts += 1
@@ -84,4 +92,4 @@ def login():
 def logout():
     logout_user()
     flash('You have been logged out.')
-    return redirect(url_for('home.index'))
+    return redirect(url_for('route.index'))

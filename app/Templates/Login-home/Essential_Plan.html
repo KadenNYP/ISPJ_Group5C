@@ -1,0 +1,72 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='css/detailed_plans.css') }}">
+
+{% extends "base.html" %}
+
+{% block title %}Essential Care Plan{% endblock %}
+
+{% block content %}
+<div class="plan-details-page py-5">
+    <div class="container">
+        <h1 class="text-center text-primary mb-4">Essential Care Plan</h1>
+        <p class="text-center text-muted mb-5">
+            The basics covered, giving you reliable care. <br> Explore the details of what's included in this reliable plan.
+        </p>
+
+        <div class="c-card shadow-sm border-0 mb-5">
+            <div class="c-card-body">
+                <h2 class="text-center text-secondary mb-4">Plan Coverage Details</h2>
+                <div class="row">
+
+                    <div class="col-md-6 mb-4">
+                        <h5 class="fw-bold">Inpatient Hospital Expenses</h5>
+                        <ul class="list-unstyled">
+                            <li><i class="bi bi-check-circle text-success"></i> As-charged coverage for hospital stays</li>
+                            <li><i class="bi bi-check-circle text-success"></i> Includes surgery, diagnostic tests, and specialist consultations</li>
+                            <li><i class="bi bi-check-circle text-success"></i> Comprehensive care for emergency admissions</li>
+                        </ul>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <h5 class="fw-bold">Co-Insurance</h5>
+                        <ul class="list-unstyled">
+                            <li><i class="bi bi-check-circle text-success"></i> 10% co-insurance applicable on claims</li>
+                            <li><i class="bi bi-check-circle text-success"></i> Co-insurance capped at $20,000 per policy year</li>
+                            <li><i class="bi bi-check-circle text-success"></i> Protects against unforeseen high-cost treatments</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <h5 class="fw-bold">Emergency Assistance Coverage</h5>
+                        <ul class="list-unstyled">
+                            <li><i class="bi bi-check-circle text-success"></i> 24/7 emergency hotline support</li>
+                            <li><i class="bi bi-check-circle text-success"></i> Evacuation and repatriation services</li>
+                            <li><i class="bi bi-check-circle text-success"></i> Covers ambulance costs for medical emergencies</li>
+                        </ul>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <h5 class="fw-bold">Additional Benefits</h5>
+                        <ul class="list-unstyled">
+                            <li><i class="bi bi-check-circle text-success"></i> No age-based premium increases</li>
+                            <li><i class="bi bi-check-circle text-success"></i> Access to a wide network of partner hospitals</li>
+                            <li><i class="bi bi-check-circle text-success"></i> Coverage for pre-existing conditions (after waiting period)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                    <h4 class="text-primary">Monthly Premium: <span class="text-success">$150.00</span></h4>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <a href="{{ url_for('route.Plans_Overview') }}" class="btn btn-secondary btn-lg me-3">Back to Plans</a>
+            <a href=" " class="btn btn-primary btn-lg">Select This Plan</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

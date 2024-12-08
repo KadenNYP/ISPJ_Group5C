@@ -1,0 +1,116 @@
+.plan-details-page {
+    background-color: #e7f3ff !important;
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+.plan-details-page h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    background-color : #ffffff important!;
+}
+
+.plan-details-page .text-muted {
+    font-size: 1rem;
+    color: #6c757d
+}
+
+.c-card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.c-card-body {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 30px;
+}
+
+.c-card-header.basic-plan {
+    background-color: #007bff;
+    color: #fff;
+    padding: 20px;
+    font-size: 1.25rem;
+    font-weight: bold;
+    border-radius: 10px 10px 0 0;
+}
+
+.c-card-text {
+    font-size: 1rem;
+}
+
+.c-card-body h2 {
+    font-size: 2rem;
+    color: #343a40;
+}
+
+.c-card-body h5 {
+    font-size: 1.25rem;
+    color: #007bff;
+    font-weight: bold;
+}
+
+.list-unstyled {
+    padding-left: 0;
+    margin-top: 20px;
+}
+
+.list-unstyled li {
+    font-size: 1rem;
+    margin-bottom: 10px;
+    color: #495057;
+}
+
+.list-unstyled li i {
+    color: #28a745;
+    margin-right: 10px;
+}
+
+.plan-details-page .row {
+    margin-top: 20px;
+}
+
+.plan-details-page .col-md-6 {
+    margin-bottom: 20px;
+}
+
+.plan-details-page .col-md-6 ul {
+    padding-left: 20px;
+}
+
+.text-center.mt-4 h4 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #007bff;
+}
+
+.text-center.mt-4 span.text-success {
+    font-size: 1.8rem;
+    color: #28a745;
+}
+
+.btn-primary, .btn-secondary {
+    font-size: 1.125rem;
+    padding: 12px 30px;
+    border-radius: 50px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border: none;
+}
+
+.btn-secondary:hover {
+    background-color: #495057;
+}
+

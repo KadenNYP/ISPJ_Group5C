@@ -26,40 +26,40 @@
      background-color: #FFE4C4 !important;
 }
 
-.btn-basic {
+.btn-essential {
     background-color: #d6eaff !important;
     border: none;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
     transition: all 0.3s ease;
 }
 
-.btn-basic:hover {
+.btn-essential:hover {
     background-color: #c2e0ff !important;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
     transform: translateY(-5px);
 }
 
-.btn-standard {
+.btn-enhanced {
     background-color: #dff3d8 !important;
     border: none;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
     transition: all 0.3s ease;
 }
 
-.btn-standard:hover {
+.btn-enhanced:hover {
     background-color: #ccecc5 !important;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
     transform: translateY(-5px);
 }
 
-.btn-premium {
+.btn-elite {
     background-color: #ffefcc !important;
     border: none;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
     transition: all 0.3s ease;
 }
 
-.btn-premium:hover {
+.btn-elite:hover {
     background-color: #ffe8b3 !important;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
     transform: translateY(-5px);

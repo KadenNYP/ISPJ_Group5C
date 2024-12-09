@@ -1,35 +1,36 @@
 /* Essential_Plan */
-.plan-details-page-1 {
+.plan-1 {
     background-color: #e7f3ff !important;
-    padding-top: 50px;
-    padding-bottom: 50px;
-}
-
-.plan-details-page-1 h1 {
-    font-size: 2.5rem;
-    font-weight: bold;
-    background-color : #ffffff important!;
-}
-
-.plan-details-page-1 .text-muted {
-    font-size: 1rem;
-    color: #6c757d
 }
 
 /* Enhanced_Plan */
-.plan-details-page-2 {
+.plan-2 {
     background-color: #e6f8e0 !important;
+}
+
+/* Elite_Plan */
+.plan-3 {
+    background-color: #fff9e5 !important;
+}
+
+/* Plus_Plan */
+.plan-4 {
+    background-color: #ffe4c4 !important;
+}
+
+/* All Plans */
+.plan-details-page {
     padding-top: 50px;
     padding-bottom: 50px;
 }
 
-.plan-details-page-2 h1 {
+.plan-details-page h1 {
     font-size: 2.5rem;
     font-weight: bold;
     background-color : #ffffff important!;
 }
 
-.plan-details-page-2 .text-muted {
+.plan-details-page .text-muted {
     font-size: 1rem;
     color: #6c757d
 }

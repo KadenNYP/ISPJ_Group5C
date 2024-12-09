@@ -61,3 +61,13 @@ def Essential_Plan():
 @route.route('/enhanced_plan')
 def Enhanced_Plan():
     return render_template("Login-home/Enhanced_Plan.html")
+
+
+@route.route('/elite_plan')
+def Elite_Plan():
+    return render_template("Login-home/Elite_Plan.html")
+
+
+@route.route('/plus_plan')
+def Plus_Plan():
+    return render_template("Login-home/Plus_Plan.html")

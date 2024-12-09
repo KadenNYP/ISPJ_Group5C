@@ -1,0 +1,69 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='css/detailed_plans.css') }}">
+
+{% extends "base.html" %}
+
+{% block title %}Insure-Ease Plus Plan{% endblock %}
+
+{% block content %}
+<div class="plan-details-page plan-4 py-5">
+    <div class="container">
+        <h1 class="text-center text-primary mb-4">Insure-Ease Plus Plan</h1>
+        <p class="text-center text-muted mb-5">
+            Unmatched coverage for a life without limits. <br> Enjoy complete peace of mind with this premium plan.
+        </p>
+
+        <div class="c-card shadow-sm border-0 mb-5">
+            <div class="c-card-body">
+                <h2 class="text-center text-secondary mb-4">Plan Coverage Details</h2>
+                <div class="row">
+
+                    <div class="col-md-6 mb-4">
+                        <h5 class="fw-bold">No Co-Insurance or Deductible</h5>
+                        <ul class="list-unstyled">
+                            <li><i class="bi bi-check-circle text-success"></i> Zero out-of-pocket costs on claims</li>
+                            <li><i class="bi bi-check-circle text-success"></i> Covers 100% of eligible hospital and outpatient bills</li>
+                            <li><i class="bi bi-check-circle text-success"></i> Maximum financial protection</li>
+                        </ul>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <h5 class="fw-bold">Enhanced Coverage Limits</h5>
+                        <ul class="list-unstyled">
+                            <li><i class="bi bi-check-circle text-success"></i> Unlimited annual policy claim limits</li>
+                            <li><i class="bi bi-check-circle text-success"></i> Covers premium inpatient & outpatient services</li>
+                            <li><i class="bi bi-check-circle text-success"></i> Includes alternative medicine and therapies coverage</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <h5 class="fw-bold">Global Plus</h5>
+                        <ul class="list-unstyled">
+                            <li><i class="bi bi-check-circle text-success"></i> Worldwide protection for both emergencies and planned treatments</li>
+                            <li><i class="bi bi-check-circle text-success"></i> Emergency evacuation and repatriation services</li>
+                            <li><i class="bi bi-check-circle text-success"></i> Access to a wider network of international hospitals coverage</li>
+                        </ul>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <h5 class="fw-bold">Exclusive Member Benefits</h5>
+                        <ul class="list-unstyled">
+                            <li><i class="bi bi-check-circle text-success"></i> Priority claims processing</li>
+                            <li><i class="bi bi-check-circle text-success"></i> Access to wellness programs and premium rewards</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                    <h4 class="text-primary">Monthly Premium: <span class="text-success">$950.00</span></h4>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <a href="{{ url_for('route.Plans_Overview') }}" class="btn btn-secondary btn-lg me-3">Back to Plans</a>
+            <a href=" " class="btn btn-primary btn-lg">Select This Plan</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

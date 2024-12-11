@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_user, login_required, logout_user, current_user
-from .models import User
+from .models import *
 from werkzeug.security import generate_password_hash, check_password_hash 
 from datetime import datetime, timedelta
 from .init import db
@@ -18,7 +18,7 @@ def is_valid_email(email):
     return re.match(email_address, email) is not None
 
 
-@auth.route('signup', methods=['GET', 'POST'])
+@auth.route('signup', methods=["GET", "POST"])
 def signup():
     if request.method == 'POST':
         first_name = request.form.get('first_name')
@@ -43,7 +43,7 @@ def signup():
         else:
             role = Role.query.filter_by(name=role_name).first()
             hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
-            user = User(first_name=first_name, last_name=last_name, email=email, password=hashed_password, role=role)            
+            user = User(first_name=first_name, last_name=last_name, email=email, password=hashed_password, role=role)
             db.session.add(user)
             db.session.commit()
             login_user(user, remember=True)
@@ -53,7 +53,7 @@ def signup():
     return render_template('user/signup.html')
 
 
-@auth.route('login', methods=['GET', 'POST'])
+@auth.route('login', methods=["GET", "POST"])
 def login():
     if request.method == 'POST':
         email = request.form.get('email')

@@ -1,5 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
+from flask_login import login_required
 from .models import *
+from .auth import current_user
 
 route = Blueprint('route', __name__)
 
@@ -54,20 +56,28 @@ def ContactSupport():
 
 
 @route.route('/essential_plan')
+@login_required
 def Essential_Plan():
-    return render_template("Login-home/Essential_Plan.html")
+    if current_user:
+        return render_template("Login-home/Essential_Plan.html")
 
 
 @route.route('/enhanced_plan')
+@login_required
 def Enhanced_Plan():
-    return render_template("Login-home/Enhanced_Plan.html")
+    if current_user:
+        return render_template("Login-home/Enhanced_Plan.html")
 
 
 @route.route('/elite_plan')
+@login_required
 def Elite_Plan():
-    return render_template("Login-home/Elite_Plan.html")
+    if current_user:
+        return render_template("Login-home/Elite_Plan.html")
 
 
 @route.route('/plus_plan')
+@login_required
 def Plus_Plan():
-    return render_template("Login-home/Plus_Plan.html")
+    if current_user:
+        return render_template("Login-home/Plus_Plan.html")

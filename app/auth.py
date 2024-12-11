@@ -26,6 +26,7 @@ def signup():
         email = request.form.get('email')
         password = request.form.get('password')
         confirm_password = request.form.get('confirm_password')
+        role_name = request.form.get('role')
         
         # Debugging
         print(f"Signup form data: first_name={first_name}, last_name={last_name}, email={email}, password={password}, confirm_password={confirm_password}")
@@ -40,8 +41,9 @@ def signup():
         elif password != confirm_password:
             flash('Passwords do not match.', category='error')
         else:
+            role = Role.query.filter_by(name=role_name).first()
             hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
-            user = User(first_name=first_name, last_name=last_name, email=email, password=hashed_password)            
+            user = User(first_name=first_name, last_name=last_name, email=email, password=hashed_password, role=role)            
             db.session.add(user)
             db.session.commit()
             login_user(user, remember=True)

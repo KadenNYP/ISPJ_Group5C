@@ -83,7 +83,13 @@ def Plus_Plan():
         return render_template("Login-home/Plus_Plan.html")
 
 
-@route.route('/purchase/1')
+@route.route('/purchase/Step_1')
 @login_required
-def purchase_personal_info():
-    return render_template("Login-home/Purchase_Personal Info.html")
+def personal_info():
+    return render_template("Login-home/Purchase_Personal_Info.html")
+
+
+@route.route('/purchase/Step_2')
+@login_required
+def payment_info():
+    return render_template("Login-home/Purchase_Payment_Info.html")

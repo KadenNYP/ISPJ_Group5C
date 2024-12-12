@@ -77,6 +77,13 @@
     transform: translateY(-5px);
 }
 
+.btn-essential a,
+.btn-enhanced a,
+.btn-elite a,
+.btn-plus a {
+    color: #000000;
+}
+
 .card-header {
     font-size: 1.5rem;
     padding: 1rem;

@@ -24,7 +24,11 @@
                             <li><i class="bi bi-check-circle text-success"></i>10% co-insurance capped at $20k per policy year</li>
                             <li><i class="bi bi-check-circle text-success"></i>Emergency Assistance Coverage</li>
                         </ul>
-                        <button class="btn btn-essential w-100">Login to Select Plan</button>
+                        {% if current_user.is_authenticated %}
+                        <button class="btn btn-essential w-100"><a href="{{ url_for('route.Essential_Plan') }}">View More</a></button>
+                        {% else %}
+                        <button class="btn btn-essential w-100"><a href="{{ url_for('auth.login') }}">Login to View More</a></button>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -43,7 +47,11 @@
                             <li><i class="bi bi-check-circle text-success"></i>Critical Illness Protection</li>
                             <li><i class="bi bi-check-circle text-success"></i>emergency medical evacuation & coverage</li>
                         </ul>
-                        <button class="btn btn-enhanced w-100">Login to Select Plan</button>
+                        {% if current_user.is_authenticated %}
+                        <button class="btn btn-enhanced w-100"><a href="{{ url_for('route.Enhanced_Plan') }}">View More</a></button>
+                        {% else %}
+                        <button class="btn btn-enhanced w-100"><a href="{{ url_for('auth.login') }}">Login to View More</a></button>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -61,7 +69,11 @@
                             <li><i class="bi bi-check-circle text-success"></i>Global Coverage & Emergency Evacuation</li>
                             <li><i class="bi bi-check-circle text-success"></i>Critical Illness & Long-Term Care</li>
                         </ul>
-                        <button class="btn btn-elite w-100">Login to Select Plan</button>
+                        {% if current_user.is_authenticated %}
+                        <button class="btn btn-elite w-100"><a href="{{ url_for('route.Elite_Plan') }}">View More</a></button>
+                        {% else %}
+                        <button class="btn btn-elite w-100"><a href="{{ url_for('auth.login') }}">Login to View More</a></button>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -76,7 +88,11 @@
                         <ul class="list-unstyled mb-4">
                             <li><i class="bi bi-check-circle text-success"></i>No Co-Insurance or Deductible payable</li>
                         </ul>
-                        <button class="btn btn-plus w-100">Login to Select Plan</button>
+                        {% if current_user.is_authenticated %}
+                        <button class="btn btn-plus w-100"><a href="{{ url_for('route.Plus_Plan') }}">View More</a></button>
+                        {% else %}
+                        <button class="btn btn-plus w-100"><a href="{{ url_for('auth.login') }}">Login to View More</a></button>
+                        {% endif %}
                     </div>
                 </div>
             </div>

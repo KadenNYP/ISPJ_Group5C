@@ -19,12 +19,12 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.btn-warning {
+.btn-account {
     border-radius: 20px;
     transition: all 0.3s ease;
 }
 
-.btn-warning:hover {
+.btn-account:hover {
     background-color: #ff8800;
     box-shadow: 0 4px 8px rgba(255, 136, 0, 0.5);
 }

@@ -81,3 +81,9 @@ def Elite_Plan():
 def Plus_Plan():
     if current_user:
         return render_template("Login-home/Plus_Plan.html")
+
+
+@route.route('/purchase/1')
+@login_required
+def purchase_personal_info():
+    return render_template("Login-home/Purchase_Personal Info.html")

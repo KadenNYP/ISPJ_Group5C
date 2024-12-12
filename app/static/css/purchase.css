@@ -1,0 +1,43 @@
+.purchase-p-info-form {
+        background-color: #1a6f59 !important;
+        border-radius: 10px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+.purchase-p-info-form h2 {
+        font-weight: bold;
+    }
+
+.purchase-p-info-form label {
+        font-weight: 600;
+        color: #f8f9fa;
+    }
+
+.purchase-p-info-form input {
+        border-radius: 5px;
+        border: 1px solid #ced4da;
+        padding: 10px;
+    }
+
+.purchase-p-info-form input:focus {
+        border-color: #007bff;
+        outline: none;
+        box-shadow: 0 0 4px rgba(0, 123, 255, 0.25);
+    }
+
+.purchase-p-info-form .form-check-label a:hover {
+        text-decoration: underline;
+    }
+
+.purchase-p-info-form .btn {
+        background-color: #007bff;
+        color: #fff;
+        font-size: 16px;
+        font-weight: 600;
+        border: none;
+    }
+
+.purchase-p-info-form .btn:hover {
+        background-color: #0056b3;
+    }

@@ -96,10 +96,12 @@ def logout():
     flash('You have been logged out.')
     return redirect(url_for('route.index'))
 
+
 @auth.route('profile', methods=["GET", "POST"])
 @login_required
 def profile():
     return render_template('user/profile.html', user=current_user)
+
 
 @auth.route('userdb', methods=["GET", "POST"])
 @login_required

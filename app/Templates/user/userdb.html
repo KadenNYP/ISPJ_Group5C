@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="text-black">User List</h1>
+<div class="container-fluid">
+    <div class="text-black">
+        {% if count == 0 %}
+        <p>There are no users.</p>
+        {% elif count == 1 %}
+        <p>There is 1 user.</p>
+        {% else %}
+        <p>There are {{ count }} users.</p>
+        {% endif %}
+    </div>
+    {% if current_user.role.name == 'Support' %}
+    <div class="w3-container">
+        <h3 class="text-black" style="display: inline-block;">Filter By:</h3>
+        <div class="w3-dropdown-hover" style="display: inline-block; margin-left: 10px;">
+            <button class="w3-button w3-black">
+            {% if role_filter == 'staff' %}
+                Staff
+            {% elif role_filter == 'customer' %}
+                Customer
+            {% else %}
+                All
+            {% endif %}
+            </button>
+            <div class="w3-dropdown-content w3-bar-block w3-card w3-light-grey bg-dark" id="myDIV">
+                <a class="w3-bar-item w3-button" href="{{ url_for('auth.userdb', role='all') }}">All</a>
+                <a class="w3-bar-item w3-button" href="{{ url_for('auth.userdb', role='staff') }}" {% if role_filter=='staff' %}selected{% endif %}>Staff</a>
+                <a class="w3-bar-item w3-button" href="{{ url_for('auth.userdb', role='customer') }}" {% if role_filter=='customer' %}selected{% endif %}>Customer</a>
+            </div>
+        </div>
+        <p class="text-black">Mouse-over the dropdown and select the user type to filter by.</p>
+    </div>
+
+
+    <div>
+        <table class="table table-striped text-black">
+            <thead>
+            <tr>
+                <th>User ID</th>
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>Hashed Password</th>
+                <th>User Type</th>
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for row in user_list %}
+            <tr>
+                <td class="text-black">{{ row.id }}</td>
+                <td class="text-black">{{ row.first_name }} {{ row.last_name }}</td>
+                <td class="text-black">{{ row.email }}</td>
+                <td class="text-black">{{ row.password }}</td>
+                <td class="text-black">{{ row.role_id }}</td>
+                <td>
+                    <form action="/" method="GET">
+                        <input type="submit" class="btn btn-light" value="Update">
+                    </form>
+                </td>
+                <td>
+                    <form action="/" method="POST">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                        <!-- Button to Open the Modal -->
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                data-bs-target="#myModal_{{row.id}}">
+                            Delete
+                        </button>
+
+                        <!-- The Modal -->
+                        <div class="modal text-dark" id="myModal_{{row.id}}">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+
+                                    <!-- Modal Header -->
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Delete Confirmation</h4>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+
+                                    <!-- Modal body -->
+                                    <div class="modal-body">
+                                        Are you sure you want to delete {{ row.fname }} {{ row.lname }}?
+                                    </div>
+
+                                    <!-- Modal footer -->
+                                    <div class="modal-footer">
+                                        <input type="submit" value="Delete" class="btn btn-danger">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+
+</div>
+{% endblock %}

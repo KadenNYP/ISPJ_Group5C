@@ -95,3 +95,30 @@ def logout():
     logout_user()
     flash('You have been logged out.')
     return redirect(url_for('route.index'))
+
+@auth.route('profile', methods=["GET", "POST"])
+@login_required
+def profile():
+    return render_template('user/profile.html', user=current_user)
+
+@auth.route('userdb', methods=["GET", "POST"])
+@login_required
+def userdb():
+    role_filter = request.args.get('role', '')
+    
+    if role_filter == 'customer' or role_filter == 'staff':
+        user_list = User.query.filter(User.role_id == 1).all()
+
+    elif role_filter == 'staff':
+        user_list = User.query.filter(User.role_id != 1).all()
+
+    else:
+        user_list = User.query.all()
+
+    count = len(user_list)
+    print(role_filter)
+    for row in user_list:
+        print(row.role_id)
+            
+
+    return render_template('user/userdb.html', role_filter=role_filter, user_list=user_list, count=count)

@@ -5,13 +5,11 @@ from .auth import current_user
 
 route = Blueprint('route', __name__)
 
-"""@route.before_app_request
+'''
+@route.before_app_request
 def before_request():
-    if 'user' in session:
-        g.user = session['user']
-    else:
-        g.user = None"""
-
+    user=current_user
+'''
 
 @route.route('/')
 def index():
@@ -93,3 +91,5 @@ def personal_info():
 @login_required
 def payment_info():
     return render_template("Login-home/Purchase_Payment_Info.html")
+
+

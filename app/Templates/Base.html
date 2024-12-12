@@ -17,6 +17,10 @@
         {% include 'includes/_navbar.html' %}
     {% endblock %}
 
+    {% if current_user.is_authenticated and current_user.role.name != 'Customer' %}
+        {% include 'includes/_navbarStaff.html' %}
+    {% endif %}
+
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             {% for category, message in messages %}

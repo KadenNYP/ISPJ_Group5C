@@ -26,9 +26,9 @@ try:
 
     my_cursor.execute("USE website")
 
-    # Create the roles table
+    # Create the role table
     my_cursor.execute('''
-    CREATE TABLE roles (
+    CREATE TABLE role (
         id INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(50) NOT NULL UNIQUE
     );
@@ -36,7 +36,7 @@ try:
 
     # Populate the roles table
     my_cursor.execute('''
-    INSERT INTO roles (name) VALUES 
+    INSERT INTO role (name) VALUES 
     ('Customer'),
     ('Owner'),
     ('Support');
@@ -55,7 +55,7 @@ try:
         lockout_time DATETIME DEFAULT NULL,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        FOREIGN KEY (role_id) REFERENCES roles(id)
+        FOREIGN KEY (role_id) REFERENCES role(id)
     );
     ''')
 

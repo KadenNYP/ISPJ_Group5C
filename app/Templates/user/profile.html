@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{{ current_user.fname }} {{ current_user.lname }}
+{{ current_user.email }}
+{{ current_user.role.name }}
+{% endblock %}

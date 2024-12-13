@@ -1,7 +1,6 @@
 from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func
-from datetime import datetime
 from .init import db
 
 
@@ -38,6 +37,7 @@ class ContactMessage(db.Model):
     subject = db.Column(db.VARCHAR(150), nullable=False)
     message = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.TIMESTAMP, server_default=func.current_timestamp(), nullable=False)
+    anonymized_at = db.Column(db.TIMESTAMP, nullable=True)
 
     def __repr__(self):
         return f'<ContactMessage {self.name}>'

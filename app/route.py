@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required
+from .Security_Features_Function.Contact_Anonymization import anonymize_old_records
 from .models import *
 from .auth import current_user
 
@@ -10,6 +11,7 @@ route = Blueprint('route', __name__)
 def before_request():
     user=current_user
 '''
+
 
 @route.route('/')
 def index():
@@ -28,6 +30,8 @@ def PolicyTerms():
 
 @route.route('/contact', methods=["GET", "POST"])
 def ContactSupport():
+    anonymize_old_records()
+
     if request.method == 'POST':
         name = request.form.get('name')
         email = request.form.get('email')

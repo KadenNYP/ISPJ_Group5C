@@ -121,6 +121,5 @@ def userdb():
     print(role_filter)
     for row in user_list:
         print(row.role_id)
-            
 
     return render_template('user/userdb.html', role_filter=role_filter, user_list=user_list, count=count)

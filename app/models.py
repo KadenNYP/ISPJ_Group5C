@@ -30,6 +30,18 @@ class User(db.Model, UserMixin):
         self.role = role
 
 
+class Encryption(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column(db.String(150), nullable=False)
+    email = db.Column(db.String(150), unique=True, nullable=False)
+    encryption_key = db.Column(db.String(50), nullable=False)
+
+    def __init__(self, first_name, email, encryption_key):
+        self.first_name = first_name
+        self.email = email
+        self.encryption_key = encryption_key
+
+
 class ContactMessage(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.VARCHAR(30), nullable=False)

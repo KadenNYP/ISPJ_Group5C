@@ -1,10 +1,11 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_user, login_required, logout_user, current_user
 from .models import *
+from app.Security_Features_Function.Encryption import *
 from werkzeug.security import generate_password_hash, check_password_hash 
 from datetime import datetime, timedelta
 from .init import db
-import re 
+import re
 
 auth = Blueprint('auth', __name__)
 
@@ -31,6 +32,9 @@ def signup():
         # Debugging
         print(f"Signup form data: first_name={first_name}, last_name={last_name}, email={email}, password={password}, confirm_password={confirm_password}")
 
+        encryption_key = Fernet.generate_key()
+        encryption_key_str = encryption_key.decode()
+
         user = User.query.filter_by(email=email).first()
 
         # Check if the email already exists
@@ -46,6 +50,11 @@ def signup():
             user = User(first_name=first_name, last_name=last_name, email=email, password=hashed_password, role=role)
             db.session.add(user)
             db.session.commit()
+
+            encryption_entry = Encryption(first_name=first_name, email=email, encryption_key=encryption_key_str)
+            db.session.add(encryption_entry)
+            db.session.commit()
+
             login_user(user, remember=True)
             flash('Account created!', category='success')
             return redirect(url_for('route.index'))

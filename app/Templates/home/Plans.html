@@ -45,7 +45,7 @@
                             <li>AS-charged coverage for both inpatient & outpatient</li>
                             <li>Co-insurance capped at $3k per policy year</li>
                             <li>Critical Illness Protection</li>
-                            <li><emergency medical evacuation & coverage</li>
+                            <li>Emergency medical evacuation & coverage</li>
                         </ul>
                         <form action="{{ url_for('route.Enhanced_Plan') if current_user.is_authenticated else url_for('auth.login') }}" method="GET">
                             <button type="submit" class="btn btn-enhanced w-100">

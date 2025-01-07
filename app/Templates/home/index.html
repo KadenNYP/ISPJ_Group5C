@@ -7,7 +7,11 @@
     <div class="container">
         <h1 class="display-4 fw-bold">Welcome</h1>
         <p class="lead mt-3">Secure your future with the best insurance plans just for you.</p>
-        <a href="/signup" class="btn btn-light btn-lg mt-4">Get Started</a>
+        <form action="{{ url_for('auth.profile') if current_user.is_authenticated else url_for('auth.signup') }}" method="GET">
+            <button type="submit" class="btn btn-light btn-lg mt-4">
+                {{ 'View Profile' if current_user.is_authenticated else 'Get Started' }}
+            </button>
+        </form>
     </div>
 </div>
 
@@ -24,7 +28,7 @@
         <h5>
             We are your trusted partner every step of the way
         </h5>
-        <a href="/Plans" class="btn btn-primary">Learn More</a>
+        <a href="/plans" class="btn btn-primary">Learn More</a>
     </div>
 </div>
 

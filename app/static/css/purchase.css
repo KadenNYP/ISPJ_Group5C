@@ -1,8 +1,9 @@
 .purchase-p-info-form {
         background-color: #1a6f59 !important;
         border-radius: 10px;
-        max-width: 1200px;
+        max-width: 1100px;
         margin: 0 auto;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
     }
 
 .purchase-p-info-form h2 {
@@ -36,6 +37,8 @@
         font-size: 16px;
         font-weight: 600;
         border: none;
+        border-radius: 25px;
+        transition: all 0.3s ease;
     }
 
 .purchase-p-info-form .btn:hover {

@@ -16,7 +16,7 @@
     </div>
 
     <h2 class="text-center text-white mb-4">Payment Information</h2>
-    <form autocomplete="off" action="" method="POST">
+    <form autocomplete="off" action="{{ url_for('route.payment_info', plan_id=plan_id) }}" method="POST" id="payment_details">
         <div class="row">
             <div class="col-md-6 mb-3">
                 <label for="ch-name" class="form-label">Cardholder Name</label>
@@ -46,7 +46,7 @@
         </div>
 
         <div class="text-center">
-            <button type="submit" class="btn btn-primary btn-lg px-4">Next</button>
+            <button type="submit" class="btn btn-primary btn-lg px-4">Submit</button>
         </div>
     </form>
 </div>

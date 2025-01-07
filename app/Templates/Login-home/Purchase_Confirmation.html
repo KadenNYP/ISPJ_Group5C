@@ -1,0 +1,67 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='css/purchase.css') }}">
+
+{% extends "base.html" %}
+
+{% block title %}Purchase Confirmation{% endblock %}
+
+{% block content %}
+<div class="purchase-p-info-form shadow-lg p-5">
+
+    <div class="mb-4">
+        <div class="progress" style="height: 15px;">
+            <div class="progress-bar bg-success" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                Step 3 of 3, 100% Completion
+            </div>
+        </div>
+    </div>
+
+    <h2 class="text-center text-white mb-4">Payment Successful</h2>
+    <p class="text-center text-white">Thank you for your purchase! Below is the summary of your plan details.</p>
+
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label><strong>Policy Number:</strong></label>
+                    <input type="text" class="form-control" value="{{ purchase.policy_num }}" disabled>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label><strong>Plan Name:</strong></label>
+                    <input type="text" class="form-control" value="{{ purchase.plan_name }}" disabled>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label><strong>User Name:</strong></label>
+                    <input type="text" class="form-control" value="{{ purchase.first_name }} {{ current_user.last_name }}" disabled>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label><strong>Email:</strong></label>
+                    <input type="email" class="form-control" value="{{ purchase.email }}" disabled>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label><strong>Plan Price:</strong></label>
+                    <input type="text" class="form-control" value="{{ purchase.plan_price }}" disabled>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label><strong>Effective Date:</strong></label>
+                    <input type="text" class="form-control" value="{{ purchase.effective_date.strftime('%B %d, %Y') }}" disabled>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label><strong>Expiration Date:</strong></label>
+                    <input type="text" class="form-control" value="{{ purchase.expiration_date.strftime('%B %d, %Y') }}" disabled>
+                </div>
+            </div>
+
+
+        <div class="text-center mt-4">
+            <a href="{{ url_for('route.index') }}" class="btn">Back to Home</a>
+        </div>
+</div>
+{% endblock %}

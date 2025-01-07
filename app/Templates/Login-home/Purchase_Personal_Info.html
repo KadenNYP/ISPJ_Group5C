@@ -16,7 +16,7 @@
     </div>
 
     <h2 class="text-center text-white mb-4">Personal Information</h2>
-    <form autocomplete="off" action="" method="POST">
+    <form autocomplete="off" action="{{ url_for('route.personal_info', plan_id=plan_id) }}" method="POST" id="payment_details">
         <div class="row">
             <div class="col-md-6 mb-3">
                 <label for="fname" class="form-label">First Name</label>

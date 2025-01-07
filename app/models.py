@@ -53,3 +53,65 @@ class ContactMessage(db.Model):
 
     def __repr__(self):
         return f'<ContactMessage {self.name}>'
+
+
+class BillingAddress(db.Model):
+    __tablename__ = 'billing_addresses'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    fname = db.Column(db.String(150), nullable=False)
+    email = db.Column(db.String(150), nullable=False)
+    street_address = db.Column(db.String(255), nullable=False)
+    city = db.Column(db.String(100), nullable=False)
+    postal_code = db.Column(db.String(6), nullable=False)
+    country = db.Column(db.String(100), nullable=False)
+    created_at = db.Column(db.TIMESTAMP, server_default=func.current_timestamp(), nullable=False)
+    updated_at = db.Column(db.TIMESTAMP, server_default=func.current_timestamp(), server_onupdate=func.current_timestamp())
+
+    user = db.relationship('User', backref=db.backref('billing_addresses', lazy=True))
+
+    def __init__(self, user_id, fname, email, street_address, city, postal_code, country, created_at):
+        self.user_id = user_id
+        self.fname = fname
+        self.email = email
+        self.street_address = street_address
+        self.city = city
+        self.postal_code = postal_code
+        self.country = country
+        self.created_at = created_at
+
+
+class Payment(db.Model):
+    __tablename__ = 'payments'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    cardholder_name = db.Column(db.String(100), nullable=False)
+    card_number = db.Column(db.String(19), nullable=False)
+    expiration_date = db.Column(db.String(5), nullable=False)
+    cvv = db.Column(db.String(3), nullable=False)
+    created_at = db.Column(db.TIMESTAMP, server_default=func.current_timestamp(), nullable=False)
+    updated_at = db.Column(db.TIMESTAMP, server_default=func.current_timestamp(), server_onupdate=func.current_timestamp())
+
+    user = db.relationship('User', backref=db.backref('payments', lazy=True))
+
+    def __repr__(self):
+        return f"<Payment id={self.id} user_id={self.user_id}>"
+
+
+class Purchase_details(db.Model):
+    __tablename__ = 'purchase_detail'
+
+    id = db.Column(db.Integer, primary_key=True)
+    policy_num = db.Column(db.String(10), unique=True, nullable=False)
+    first_name = db.Column(db.String(150), nullable=False)
+    email = db.Column(db.String(150), nullable=False)
+    plan_name = db.Column(db.String(20), nullable=False)
+    plan_price = db.Column(db.String(20), nullable=False)
+    effective_date = db.Column(db.DateTime, nullable=False)
+    expiration_date = db.Column(db.DateTime, nullable=False)
+
+    def __repr__(self):
+        return f"<Purchase {self.policy_num} - {self.first_name} - {self.effective_date}>"
+

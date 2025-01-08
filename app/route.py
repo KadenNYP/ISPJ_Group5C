@@ -1,10 +1,12 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, session
 from flask_login import login_required
 from .Security_Features_Function.Contact_Anonymization import anonymize_old_records
+from .Security_Features_Function.Encryption import encrypt_data
 from .models import *
 from .auth import current_user
 import random
 from datetime import timedelta, datetime
+
 
 route = Blueprint('route', __name__)
 
@@ -109,7 +111,9 @@ def personal_info(plan_id):
                 flash("All fields are required. Please fill in the missing details.", "danger")
                 return redirect(url_for('route.personal_info', plan_id=plan_id))
 
-            billing_address = BillingAddress(user_id=current_user.id, fname=current_user.first_name, email=current_user.email, street_address=street_address, city=city, postal_code=postal_code, country=country, created_at=func.current_timestamp())
+            encrypted_postal_code = encrypt_data(postal_code)
+
+            billing_address = BillingAddress(user_id=current_user.id, fname=current_user.first_name, email=current_user.email, street_address=street_address, city=city, postal_code=encrypted_postal_code, country=country, created_at=func.current_timestamp())
 
             db.session.add(billing_address)
             db.session.commit()
@@ -121,7 +125,7 @@ def personal_info(plan_id):
         except Exception as e:
             db.session.rollback()
             flash('An error occurred while saving your information. Please try again.', 'error')
-            return redirect(url_for('route.personal_info'))
+            return redirect(url_for('route.personal_info', plan_id=plan_id))
 
     return render_template("Login-home/Purchase_Personal_Info.html", current_user=current_user, plan_id=plan_id)
 
@@ -145,7 +149,10 @@ def payment_info(plan_id):
                 flash("All fields are required. Please fill in the missing details.", "danger")
                 return redirect(url_for('route.payment_info', plan_id=plan_id))
 
-            payment = Payment(user_id=current_user.id, cardholder_name=cardholder_name, card_number=card_number, expiration_date=expiration_date, cvv=cvv, created_at=func.current_timestamp())
+            encrypted_cvv = encrypt_data(cvv)
+            encrypted_card_num = encrypt_data(card_number)
+
+            payment = Payment(user_id=current_user.id, cardholder_name=cardholder_name, card_number=encrypted_card_num, expiration_date=expiration_date, cvv=encrypted_cvv, created_at=func.current_timestamp())
 
             db.session.add(payment)
             db.session.commit()
@@ -185,7 +192,7 @@ def payment_info(plan_id):
         except Exception as e:
             db.session.rollback()
             flash("An error occurred while processing your payment. Please try again.", "error")
-            return redirect(url_for('route.payment_info'))
+            return redirect(url_for('route.payment_info', plan_id=plan_id))
 
     return render_template("Login-home/Purchase_Payment_Info.html", plan_id=plan_id)
 

@@ -32,8 +32,7 @@ def signup():
         # Debugging
         print(f"Signup form data: first_name={first_name}, last_name={last_name}, email={email}, password={password}, confirm_password={confirm_password}")
 
-        encryption_key = Fernet.generate_key()
-        encryption_key_str = encryption_key.decode()
+        encryption_key = Fernet.generate_key().decode()
 
         user = User.query.filter_by(email=email).first()
 
@@ -47,12 +46,8 @@ def signup():
         else:
             role = Role.query.filter_by(name=role_name).first()
             hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
-            user = User(first_name=first_name, last_name=last_name, email=email, password=hashed_password, role=role)
+            user = User(first_name=first_name, last_name=last_name, email=email, password=hashed_password, role=role, encryption_key=encryption_key)
             db.session.add(user)
-            db.session.commit()
-
-            encryption_entry = Encryption(first_name=first_name, email=email, encryption_key=encryption_key_str)
-            db.session.add(encryption_entry)
             db.session.commit()
 
             login_user(user, remember=True)

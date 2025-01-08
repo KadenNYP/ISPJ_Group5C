@@ -2,6 +2,7 @@ from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func
 from .init import db
+from .Security_Features_Function.Encryption import *
 
 
 class Role(db.Model):
@@ -21,25 +22,15 @@ class User(db.Model, UserMixin):
     lockout_time = db.Column(db.DateTime, default=None)
     created_at = db.Column(db.TIMESTAMP, server_default=func.current_timestamp(), nullable=False)
     updated_at = db.Column(db.TIMESTAMP, server_default=func.current_timestamp(), server_onupdate=func.current_timestamp())
+    encryption_Key = db.Column(db.String(200), nullable=True)
 
-    def __init__(self, first_name, last_name, email, password, role):
+    def __init__(self, first_name, last_name, email, password, role, encryption_key):
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
         self.password = password
         self.role = role
-
-
-class Encryption(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String(150), nullable=False)
-    email = db.Column(db.String(150), unique=True, nullable=False)
-    encryption_key = db.Column(db.String(50), nullable=False)
-
-    def __init__(self, first_name, email, encryption_key):
-        self.first_name = first_name
-        self.email = email
-        self.encryption_key = encryption_key
+        self.encryption_Key = encryption_key
 
 
 class ContactMessage(db.Model):
@@ -64,7 +55,7 @@ class BillingAddress(db.Model):
     email = db.Column(db.String(150), nullable=False)
     street_address = db.Column(db.String(255), nullable=False)
     city = db.Column(db.String(100), nullable=False)
-    postal_code = db.Column(db.String(6), nullable=False)
+    postal_code = db.Column(db.String(200), nullable=False)
     country = db.Column(db.String(100), nullable=False)
     created_at = db.Column(db.TIMESTAMP, server_default=func.current_timestamp(), nullable=False)
     updated_at = db.Column(db.TIMESTAMP, server_default=func.current_timestamp(), server_onupdate=func.current_timestamp())
@@ -88,9 +79,9 @@ class Payment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     cardholder_name = db.Column(db.String(100), nullable=False)
-    card_number = db.Column(db.String(19), nullable=False)
+    card_number = db.Column(db.String(200), nullable=False)
     expiration_date = db.Column(db.String(5), nullable=False)
-    cvv = db.Column(db.String(3), nullable=False)
+    cvv = db.Column(db.String(200), nullable=False)
     created_at = db.Column(db.TIMESTAMP, server_default=func.current_timestamp(), nullable=False)
     updated_at = db.Column(db.TIMESTAMP, server_default=func.current_timestamp(), server_onupdate=func.current_timestamp())
 

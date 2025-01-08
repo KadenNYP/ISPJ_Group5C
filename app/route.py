@@ -152,7 +152,7 @@ def payment_info(plan_id):
             encrypted_cvv = encrypt_data(cvv)
             encrypted_card_num = encrypt_data(card_number)
 
-            payment = Payment(user_id=current_user.id, cardholder_name=cardholder_name, card_number=encrypted_card_num, expiration_date=expiration_date, cvv=encrypted_cvv, created_at=func.current_timestamp())
+            payment = Payment(user_id=current_user.id, fname=current_user.first_name, email=current_user.email, cardholder_name=cardholder_name, card_number=encrypted_card_num, expiration_date=expiration_date, cvv=encrypted_cvv, created_at=func.current_timestamp())
 
             db.session.add(payment)
             db.session.commit()
@@ -214,3 +214,15 @@ def purchase_confirmation(plan_id):
     session.pop('plan_id', None)
 
     return render_template("Login-home/Purchase_Confirmation.html", purchase=purchase, current_user=current_user)
+
+
+@route.route('/purchased_plan', methods=['GET'])
+@login_required
+def purchased_plan():
+    return render_template("user/Purchase_Plans.html", current_user=current_user)
+
+
+@route.route('/billing_info', methods=['GET'])
+@login_required
+def billing_info():
+    return render_template("user/Billing_Info.html", current_user=current_user)

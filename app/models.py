@@ -78,6 +78,8 @@ class Payment(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    fname = db.Column(db.String(150), nullable=False)
+    email = db.Column(db.String(150), nullable=False)
     cardholder_name = db.Column(db.String(100), nullable=False)
     card_number = db.Column(db.String(200), nullable=False)
     expiration_date = db.Column(db.String(5), nullable=False)

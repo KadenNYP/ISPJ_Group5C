@@ -104,6 +104,7 @@ class Purchase_details(db.Model):
     plan_price = db.Column(db.String(20), nullable=False)
     effective_date = db.Column(db.DateTime, nullable=False)
     expiration_date = db.Column(db.DateTime, nullable=False)
+    payment_method = db.Column(db.String(50))
 
     def __repr__(self):
         return f"<Purchase {self.policy_num} - {self.first_name} - {self.effective_date}>"

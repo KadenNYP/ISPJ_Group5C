@@ -55,11 +55,16 @@
             </div>
         </div>
 
+        <div id="processing-message" class="alert alert-info text-center" style="display: none;">
+        Processing your payment, please wait a while...
+        </div>
+
         <div class="text-center">
             <button type="submit" class="btn btn-primary btn-lg px-4">Submit</button>
         </div>
     </form>
 </div>
 
+<script src="{{ url_for('static', filename='js/payment.js') }}"></script>
 <script src="Payment_Visibility.js"></script>
 {% endblock %}

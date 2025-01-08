@@ -1,7 +1,9 @@
+import time
 from flask import Blueprint, render_template, redirect, url_for, flash, request, session
 from flask_login import login_required
-from .Security_Features_Function.Contact_Anonymization import anonymize_old_records
 from .Security_Features_Function.Encryption import encrypt_data
+from .Security_Features_Function.Contact_Anonymization import anonymize_old_records
+from .payment_utils import determine_plan_details, extract_payment_method
 from .models import *
 from .auth import current_user
 import random
@@ -111,6 +113,8 @@ def personal_info(plan_id):
                 flash("All fields are required. Please fill in the missing details.", "danger")
                 return redirect(url_for('route.personal_info', plan_id=plan_id))
 
+            time.sleep(1)
+
             encrypted_postal_code = encrypt_data(postal_code)
 
             billing_address = BillingAddress(user_id=current_user.id, fname=current_user.first_name, email=current_user.email, street_address=street_address, city=city, postal_code=encrypted_postal_code, country=country, created_at=func.current_timestamp())
@@ -149,6 +153,8 @@ def payment_info(plan_id):
                 flash("All fields are required. Please fill in the missing details.", "danger")
                 return redirect(url_for('route.payment_info', plan_id=plan_id))
 
+            time.sleep(5)
+
             encrypted_cvv = encrypt_data(cvv)
             encrypted_card_num = encrypt_data(card_number)
 
@@ -163,26 +169,20 @@ def payment_info(plan_id):
             while Purchase_details.query.filter_by(policy_num=policy_num).first():
                 policy_num = "POL" + str(random.randint(10000, 999999))
 
-            if plan_id == 'essential':
-                plan_name = 'Essential_Plan'
-                plan_price = '$210.00'
-            elif plan_id == 'enhanced':
-                plan_name = 'Enhanced_Plan'
-                plan_price = '$410.00'
-            elif plan_id == 'elite':
-                plan_name = 'Elited_Plan'
-                plan_price = '$680.00'
-            elif plan_id == 'plus':
-                plan_name = 'Plus_Plan'
-                plan_price = '$950.00'
-            else:
+            payment_method = extract_payment_method(card_number)
+
+            try:
+                plan_details = determine_plan_details(plan_id)
+                plan_name = plan_details['name']
+                plan_price = plan_details['price']
+            except ValueError:
                 flash("Invalid plan selected.", "danger")
                 return redirect(url_for('route.payment_info', plan_id=plan_id))
 
             effective_date = datetime.now()
             expiration_date = effective_date + timedelta(days=365)
 
-            purchase = Purchase_details(first_name=current_user.first_name, email=current_user.email, plan_name=plan_name, plan_price=plan_price, policy_num=policy_num, effective_date=effective_date, expiration_date=expiration_date)
+            purchase = Purchase_details(first_name=current_user.first_name, email=current_user.email, plan_name=plan_name, plan_price=plan_price, policy_num=policy_num, effective_date=effective_date, expiration_date=expiration_date, payment_method=payment_method)
 
             db.session.add(purchase)
             db.session.commit()

@@ -1,5 +1,5 @@
 import time
-from flask import Blueprint, render_template, redirect, url_for, flash, request, session
+from flask import Blueprint, render_template, redirect, url_for, flash, request, session, send_from_directory
 from flask_login import login_required
 from .Security_Features_Function.Encryption import encrypt_data
 from .Security_Features_Function.Contact_Anonymization import anonymize_old_records
@@ -225,4 +225,16 @@ def purchased_plan():
 @route.route('/billing_info', methods=['GET'])
 @login_required
 def billing_info():
-    return render_template("user/Billing_Info.html", current_user=current_user)
+    billing_address = BillingAddress.query.filter_by(email=current_user.email).first()
+    payment = Payment.query.filter_by(email=current_user.email).first()
+    card_type_num = Purchase_details.query.filter_by(email=current_user.email).first()
+
+    decrypted_postal_code = decrypt_data(billing_address.postal_code)
+    decrypted_cvv = decrypt_data(payment.cvv)
+
+    return render_template("user/Billing_Info.html", current_user=current_user, billing_address=billing_address, payment=payment, card_type_num=card_type_num, postal_code=decrypted_postal_code, cvv=decrypted_cvv)
+
+
+@route.route('/security_features/<path:filename>')
+def serve_security_file(filename):
+    return send_from_directory('Security_Features_Function', filename)

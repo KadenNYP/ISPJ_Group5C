@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='css/purchased_plans.css') }}">
+
+{% extends "base.html" %}
+
+{% block title %}Plan Details{% endblock %}
+
+{% block content %}
+<div class="purchase-p-info-form shadow-lg p-5">
+    {% for plans in plan_statuses %}
+    <h2 class="text-center text-white mb-4">{{ plans.plan.policy_num }}</h2>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <p><strong>Purchase Date:</strong> {{ plans.plan.effective_date.strftime('%d %B %Y') }}</p>
+            <p><strong>Status:</strong> {{ plans.status }}</p>
+            <div class="text-center">
+                <a href="{{ url_for('route.purchased_plan_details', policy_num=plans.plan.policy_num) }}" class="btn btn-primary btn-lg px-4">Click to view More</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

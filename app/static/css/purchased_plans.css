@@ -1,0 +1,63 @@
+.purchase-p-info-form {
+    background-color: #1a6f59 !important;
+    border-radius: 10px;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 30px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.purchase-p-info-form h2 {
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 20px;
+    text-align: center;
+    position: relative;
+    margin-top: 30px;
+}
+
+.purchase-p-info-form h2::after {
+    content: "";
+    display: block;
+    width: 50%;
+    height: 2px;
+    background-color: #f8f9fa;
+    margin: 10px auto 0;
+}
+
+.purchase-p-info-form .card {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    margin-top: 30px;
+}
+
+.purchase-p-info-form .card-body {
+    padding: 20px;
+}
+
+.purchase-p-info-form .card-body p {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #333;
+}
+
+.purchase-p-info-form .card-body .btn {
+    background-color: #007bff;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+}
+
+.purchase-p-info-form .card-body .btn:hover {
+    background-color: #0056b3;
+}
+
+.purchase-p-info-form .card-body .btn:focus {
+    outline: none;
+    box-shadow: 0 0 4px rgba(0, 123, 255, 0.25);
+}

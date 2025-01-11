@@ -219,7 +219,28 @@ def purchase_confirmation(plan_id):
 @route.route('/purchased_plan', methods=['GET'])
 @login_required
 def purchased_plan():
-    return render_template("user/Purchase_Plans.html", current_user=current_user)
+    plan = Purchase_details.query.filter_by(email=current_user.email).all()
+
+    plan_statuses = []
+
+    for plan in plan:
+        if isinstance(plan.expiration_date, datetime):
+            status = "Active" if datetime.now() < plan.expiration_date else "Expired"
+
+        plan_statuses.append({
+            "plan": plan,
+            "status": status
+        })
+
+    return render_template("user/Purchase_Plans_list.html", current_user=current_user, plan_statuses=plan_statuses)
+
+
+@route.route('/purchased_plan_details/<string:policy_num>', methods=['GET'])
+@login_required
+def purchased_plan_details(policy_num):
+    purchase = Purchase_details.query.filter_by(policy_num=policy_num, email=current_user.email).first()
+
+    return render_template("Login-home/Purchase_Confirmation.html", purchase=purchase, current_user=current_user)
 
 
 @route.route('/billing_info', methods=['GET'])

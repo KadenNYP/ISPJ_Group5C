@@ -54,12 +54,12 @@
 
             <div class="row">
                 <div class="col-md-6 mb-3">
-                    <label><strong>Expiration Date:</strong></label>
-                    <input type="text" class="form-control" value="{{ purchase.expiration_date.strftime('%B %d, %Y') }}" disabled>
-                </div>
-                <div class="col-md-6 mb-3">
                     <label><strong>Effective Date:</strong></label>
                     <input type="text" class="form-control" value="{{ purchase.effective_date.strftime('%B %d, %Y') }}" disabled>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label><strong>Expiration Date:</strong></label>
+                    <input type="text" class="form-control" value="{{ purchase.expiration_date.strftime('%B %d, %Y') }}" disabled>
                 </div>
             </div>
 

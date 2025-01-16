@@ -34,7 +34,7 @@
         <div class="row">
             <div class="col-md-6 mb-3">
                 <label class="form-label">Postal Code</label>
-                <input type="text" class="form-control" value="{{ postal_code }}" disabled>
+                <input type="text" class="form-control" value="{{ postal_code[:3] }}***" disabled>
             </div>
             <div class="col-md-6 mb-3">
                 <label class="form-label">Country</label>
@@ -62,7 +62,7 @@
             </div>
             <div class="col-md-6 mb-3">
                 <label class="form-label">CVV</label>
-                <input type="text" class="form-control" value="{{ cvv }}" disabled>
+                <input type="text" class="form-control" value="***" disabled>
             </div>
         </div>
     </form>

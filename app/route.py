@@ -182,7 +182,7 @@ def payment_info(plan_id):
             effective_date = datetime.now()
             expiration_date = effective_date + timedelta(days=365)
 
-            purchase = Purchase_details(first_name=current_user.first_name, email=current_user.email, plan_name=plan_name, plan_price=plan_price, policy_num=policy_num, effective_date=effective_date, expiration_date=expiration_date, payment_method=payment_method)
+            purchase = Purchase_details(first_name=current_user.first_name, email=current_user.email, plan_name=plan_name, plan_price=plan_price, policy_num=policy_num, effective_date=effective_date, expiration_date=expiration_date, payment_method=payment_method, payment_id=payment.id)
 
             db.session.add(purchase)
             db.session.commit()
@@ -248,12 +248,12 @@ def purchased_plan_details(policy_num):
 def billing_info():
     billing_address = BillingAddress.query.filter_by(email=current_user.email).first()
     payment = Payment.query.filter_by(email=current_user.email).first()
-    card_type_num = Purchase_details.query.filter_by(email=current_user.email).first()
 
     decrypted_postal_code = decrypt_data(billing_address.postal_code)
     decrypted_cvv = decrypt_data(payment.cvv)
+    decrypted_card_num = decrypt_data(payment.card_number)
 
-    return render_template("user/Billing_Info.html", current_user=current_user, billing_address=billing_address, payment=payment, card_type_num=card_type_num, postal_code=decrypted_postal_code, cvv=decrypted_cvv)
+    return render_template("user/Billing_Info.html", current_user=current_user, billing_address=billing_address, payment=payment, card_num=decrypted_card_num, postal_code=decrypted_postal_code, cvv=decrypted_cvv)
 
 
 @route.route('/security_features/<path:filename>')

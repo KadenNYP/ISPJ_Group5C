@@ -88,6 +88,7 @@ class Payment(db.Model):
     updated_at = db.Column(db.TIMESTAMP, server_default=func.current_timestamp(), server_onupdate=func.current_timestamp())
 
     user = db.relationship('User', backref=db.backref('payments', lazy=True))
+    purchases = db.relationship('Purchase_details', backref='payment', lazy=True)
 
     def __repr__(self):
         return f"<Payment id={self.id} user_id={self.user_id}>"
@@ -105,6 +106,7 @@ class Purchase_details(db.Model):
     effective_date = db.Column(db.DateTime, nullable=False)
     expiration_date = db.Column(db.DateTime, nullable=False)
     payment_method = db.Column(db.String(50))
+    payment_id = db.Column(db.Integer, db.ForeignKey('payments.id'), nullable=False)
 
     def __repr__(self):
         return f"<Purchase {self.policy_num} - {self.first_name} - {self.effective_date}>"

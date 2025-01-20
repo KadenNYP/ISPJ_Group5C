@@ -1,5 +1,6 @@
 import time
 from flask import Blueprint, render_template, redirect, url_for, flash, request, session, send_from_directory
+from flask import abort, current_app
 from flask_login import login_required
 from .Security_Features_Function.Encryption import encrypt_data
 from .Security_Features_Function.Contact_Anonymization import anonymize_old_records
@@ -227,20 +228,28 @@ def purchased_plan():
         if isinstance(plan.expiration_date, datetime):
             status = "Active" if datetime.now() < plan.expiration_date else "Expired"
 
+        token = current_app.serializer.dumps(plan.policy_num)
+
         plan_statuses.append({
             "plan": plan,
-            "status": status
+            "status": status,
+            "token": token
         })
 
     return render_template("user/Purchase_Plans_list.html", current_user=current_user, plan_statuses=plan_statuses)
 
 
-@route.route('/purchased_plan_details/<string:policy_num>', methods=['GET'])
+@route.route('/purchased_plan_details/<string:token>', methods=['GET'])
 @login_required
-def purchased_plan_details(policy_num):
+def purchased_plan_details(token):
+    try:
+        policy_num = current_app.serializer.loads(token)
+    except Exception:
+        abort(400, "Invalid or expired token.")
+
     purchase = Purchase_details.query.filter_by(policy_num=policy_num, email=current_user.email).first()
 
-    return render_template("Login-home/Purchase_Confirmation.html", purchase=purchase, current_user=current_user)
+    return render_template("user/Purchase_Details.html", purchase=purchase, current_user=current_user)
 
 
 @route.route('/billing_info', methods=['GET'])

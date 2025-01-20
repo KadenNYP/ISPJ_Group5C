@@ -118,7 +118,7 @@ def profile():
 def userdb():
     role_filter = request.args.get('role', '')
     
-    if role_filter == 'customer' or role_filter == 'staff':
+    if role_filter == 'customer':
         user_list = User.query.filter(User.role_id == 1).all()
 
     elif role_filter == 'staff':

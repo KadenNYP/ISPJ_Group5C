@@ -13,7 +13,7 @@
             <p><strong>Purchase Date:</strong> {{ plans.plan.effective_date.strftime('%d %B %Y') }}</p>
             <p><strong>Status:</strong> {{ plans.status }}</p>
             <div class="text-center">
-                <a href="{{ url_for('route.purchased_plan_details', policy_num=plans.plan.policy_num) }}" class="btn btn-primary btn-lg px-4">Click to view More</a>
+                <a href="{{ url_for('route.purchased_plan_details', token=plans.token) }}" class="btn btn-primary btn-lg px-4">Click to view More</a>
             </div>
         </div>
     </div>

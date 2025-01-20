@@ -16,11 +16,11 @@
             {% endif %}
         </div>
 
-        {% if current_user.role.name == 'Support' %}
+        {% if current_user.first_name == 'Support' %}
         <div class="w3-container">
             <h3 class="text-white d-inline">Filter By:</h3>
             <div class="w3-dropdown-hover d-inline ms-2">
-                <button class="w3-button w3-black">
+                <button class="w3-button dropdown-button">
                     {% if role_filter == 'staff' %}
                         Staff
                     {% elif role_filter == 'customer' %}
@@ -29,10 +29,10 @@
                         All
                     {% endif %}
                 </button>
-                <div class="w3-dropdown-content w3-bar-block w3-card w3-light-grey bg-dark" id="myDIV">
-                    <a class="w3-bar-item w3-button {% if role_filter == 'all' %}active{% endif %}" href="{{ url_for('auth.userdb', role='all') }}">All</a>
-                    <a class="w3-bar-item w3-button {% if role_filter == 'staff' %}active{% endif %}" href="{{ url_for('auth.userdb', role='staff') }}">Staff</a>
-                    <a class="w3-bar-item w3-button {% if role_filter == 'customer' %}active{% endif %}" href="{{ url_for('auth.userdb', role='customer') }}">Customer</a>
+                <div class="w3-dropdown-content text-center text-white" id="myDIV">
+                    <a class="w3-bar-item dropdown-item {% if role_filter == 'all' %}active{% endif %}" href="{{ url_for('auth.userdb', role='all') }}">All</a>
+                    <a class="w3-bar-item dropdown-item {% if role_filter == 'staff' %}active{% endif %}" href="{{ url_for('auth.userdb', role='staff') }}">Staff</a>
+                    <a class="w3-bar-item dropdown-item {% if role_filter == 'customer' %}active{% endif %}" href="{{ url_for('auth.userdb', role='customer') }}">Customer</a>
                 </div>
             </div>
             <p class="text-white mt-2">Mouse-over the dropdown and select the user type to filter by.</p>
@@ -40,7 +40,7 @@
 
         <!-- User Table -->
         <div>
-            <table class="table table-striped text-white">
+            <table class="table text-white">
                 <thead>
                     <tr>
                         <th>User ID</th>

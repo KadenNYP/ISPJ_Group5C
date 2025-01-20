@@ -1,7 +1,24 @@
 .userdb-container {
         background-color: #1a6f59 !important;
         border-radius: 10px;
-        max-width: 1100px;
+        max-width: 1300px;
+        overflow-y: auto;
         margin: 0 auto;
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
     }
+
+.dropdown-item {
+    display: block;
+    padding: 10px 15px;
+    font-size: 18px;
+    transition: all 0.3s ease;
+}
+
+.dropdown-item:hover {
+    background-color: #1a6f59;
+}
+
+.dropdown-item.active {
+    background-color: #1a6f59;
+    font-weight: bold;
+}

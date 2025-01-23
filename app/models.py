@@ -51,7 +51,7 @@ class BillingAddress(db.Model):
     __tablename__ = 'billing_addresses'
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     fname = db.Column(db.String(150), nullable=False)
     email = db.Column(db.String(150), nullable=False)
     street_address = db.Column(db.String(255), nullable=False)
@@ -78,7 +78,7 @@ class Payment(db.Model):
     __tablename__ = 'payments'
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     fname = db.Column(db.String(150), nullable=False)
     email = db.Column(db.String(150), nullable=False)
     cardholder_name = db.Column(db.String(100), nullable=False)

@@ -265,6 +265,12 @@ def billing_info():
     return render_template("user/Billing_Info.html", current_user=current_user, billing_address=billing_address, payment=payment, card_num=decrypted_card_num, postal_code=decrypted_postal_code, cvv=decrypted_cvv)
 
 
+@route.route('/claims_info', methods=['GET'])
+@login_required
+def claim_info():
+    return render_template("user/Claim_Info.html", current_user=current_user)
+
+
 @route.route('/security_features/<path:filename>')
 def serve_security_file(filename):
     return send_from_directory('Security_Features_Function', filename)

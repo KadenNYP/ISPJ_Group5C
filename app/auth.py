@@ -109,6 +109,7 @@ def logout():
 @login_required
 def delete_user():
     user_id = request.args.get('user_id')
+    print(user_id)
     user = User.query.filter_by(id=user_id).first()
     db.session.delete(user)
     db.session.commit()
@@ -132,7 +133,6 @@ def profile():
 @auth.route('userdb', methods=["GET", "POST"])
 @login_required
 def userdb():
-    print(current_user.role_id)
     role_filter = request.args.get('role', '')
     
     if role_filter == 'customer':
@@ -147,3 +147,18 @@ def userdb():
     count = len(user_list)
 
     return render_template('user/userdb.html', role_filter=role_filter, user_list=user_list, count=count, mask_email=mask_email)
+
+@auth.route('view_billing_address', methods=["GET", "POST"])
+@login_required
+def view_billing_address():
+    user_id = request.args.get('user_id', 0)
+    print(user_id)
+
+
+    billingaddress_list = BillingAddress.query.filter(BillingAddress.user_id == user_id).first()
+    
+    if billingaddress_list is None:
+        billingaddress_list = 0
+    print(billingaddress_list)
+    
+    return render_template('user/view_billing_address.html', billingaddress_list=billingaddress_list)

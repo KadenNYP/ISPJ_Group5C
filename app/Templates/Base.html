@@ -14,12 +14,14 @@
 
 <body class="">
     {% block navbar %}
-        {% include 'includes/_navbar.html' %}
+        {% if current_user.is_authenticated and current_user.role_id != '3' %}
+            {% include 'includes/_navbar.html' %}
+            {% include 'includes/_navbarStaff.html' %}
+        {% else %} 
+            {% include 'includes/_navbar.html' %}
+        {% endif %}
     {% endblock %}
 
-    {% if current_user.is_authenticated and current_user.role_id != '1' %}
-        {% include 'includes/_navbarStaff.html' %}
-    {% endif %}
 
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}

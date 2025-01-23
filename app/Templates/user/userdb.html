@@ -49,6 +49,7 @@
                         <th>User Type</th>
                         <th></th>
                         <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -64,6 +65,11 @@
                                 <input type="submit" class="btn btn-light" value="Update">
                             </form>
                         </td>
+                        <td>
+                            <!-- View Button -->
+                            <form action="{{ url_for('auth.view_billing_address', user_id=row.id) }}" method="GET">
+                                <input type="submit" class="btn btn-primary" value="View Billing Address">
+                            </form>
                         <td>
                             <!-- Delete Button and Modal -->
                             <form action="{{ url_for('auth.delete_user', user_id=row.id) }}" method="POST">

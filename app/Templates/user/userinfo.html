@@ -5,39 +5,8 @@
 {% block content %}
 <div class="userdb-container shadow-lg p-5">
     <h1 class="text-white text-center">User List</h1>
-    <div>
-        <div class="text-white text-center">
-            {% if count == 0 %}
-                <p>There are no users.</p>
-            {% elif count == 1 %}
-                <p>There is 1 user.</p>
-            {% else %}
-                <p>There are {{ count }} users.</p>
-            {% endif %}
-        </div>
 
         {% if current_user.role_id == 2 %}
-        <div class="w3-container">
-            <h3 class="text-white d-inline">Filter By:</h3>
-            <div class="w3-dropdown-content d-inline ms-2 btn-group dropend">
-                <button class="w3-button dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="dropdownMenuButton">
-                    {% if role_filter == 'staff' %}
-                        Staff
-                    {% elif role_filter == 'customer' %}
-                        Customer
-                    {% else %}
-                        All
-                    {% endif %}
-                </button>
-                <div class="w3-dropdown-content text-center text-white dropdown-menu" id="myDIV">
-                    <a class="w3-bar-item dropdown-item {% if role_filter == 'all' %}active{% endif %}" href="{{ url_for('auth.userdb', role='all') }}">All</a>
-                    <a class="w3-bar-item dropdown-item {% if role_filter == 'staff' %}active{% endif %}" href="{{ url_for('auth.userdb', role='staff') }}">Staff</a>
-                    <a class="w3-bar-item dropdown-item {% if role_filter == 'customer' %}active{% endif %}" href="{{ url_for('auth.userdb', role='customer') }}">Customer</a>
-                </div>
-            </div>
-            <p class="text-white mt-2">Click the button and select the user type to filter by.</p>
-        </div>
-
         <!-- User Table -->
         <div>
             <table class="table text-white">

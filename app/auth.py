@@ -18,6 +18,10 @@ def is_valid_email(email):
     email_address = re.compile(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$')
     return re.match(email_address, email) is not None
 
+def mask_email(email):
+    parts = email.split('@')
+    masked_email = parts[0][0] + '***' + '@' + parts[1]
+    return masked_email
 
 @auth.route('signup', methods=["GET", "POST"])
 def signup():
@@ -100,6 +104,15 @@ def logout():
     flash('You have been logged out.')
     return redirect(url_for('route.index'))
 
+@auth.route('delete_user', methods=["GET", "POST"])
+@login_required
+def delete_user():
+    user_id = request.args.get('user_id')
+    user = User.query.filter_by(id=user_id).first()
+    db.session.delete(user)
+    db.session.commit()
+    flash('User deleted successfully!', category='success')
+    return redirect(url_for('auth.userdb'))
 
 @auth.route('profile', methods=["GET", "POST"])
 @login_required
@@ -116,20 +129,18 @@ def profile():
 @auth.route('userdb', methods=["GET", "POST"])
 @login_required
 def userdb():
+    print(current_user.role_id)
     role_filter = request.args.get('role', '')
     
     if role_filter == 'customer':
-        user_list = User.query.filter(User.role_id == 1).all()
+        user_list = User.query.filter(User.role_id == 3).all()
 
     elif role_filter == 'staff':
-        user_list = User.query.filter(User.role_id != 1).all()
+        user_list = User.query.filter(User.role_id != 3).all()
 
     else:
         user_list = User.query.all()
 
     count = len(user_list)
-    print(role_filter)
-    for row in user_list:
-        print(row.role_id)
 
-    return render_template('user/userdb.html', role_filter=role_filter, user_list=user_list, count=count)
+    return render_template('user/userdb.html', role_filter=role_filter, user_list=user_list, count=count, mask_email=mask_email)

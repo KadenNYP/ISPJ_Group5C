@@ -1,12 +1,13 @@
 from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func
+from sqlalchemy.sql import expression
 from .init import db
 from .Security_Features_Function.Encryption import *
 
 
 class Role(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(50), unique=True, nullable=False)
     users = db.relationship('User', backref='role', lazy=True)
 
@@ -18,7 +19,7 @@ class User(db.Model, UserMixin):
     last_name = db.Column(db.String(150), nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(150), nullable=False)
-    failed_login_attempts = db.Column(db.Integer, default=0, nullable=False)
+    failed_login_attempts = db.Column(db.Integer, server_default=expression.text('0'), nullable=False)
     lockout_time = db.Column(db.DateTime, default=None)
     created_at = db.Column(db.TIMESTAMP, server_default=func.current_timestamp(), nullable=False)
     updated_at = db.Column(db.TIMESTAMP, server_default=func.current_timestamp(), server_onupdate=func.current_timestamp())

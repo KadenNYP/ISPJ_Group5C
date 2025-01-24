@@ -14,8 +14,7 @@
 
 <body class="">
     {% block navbar %}
-        {% if current_user.is_authenticated and current_user.role_id != '3' %}
-            {% include 'includes/_navbar.html' %}
+        {% if current_user.is_authenticated and current_user.role_id != 3 %}
             {% include 'includes/_navbarStaff.html' %}
         {% else %} 
             {% include 'includes/_navbar.html' %}

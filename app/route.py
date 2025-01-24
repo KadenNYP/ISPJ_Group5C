@@ -228,7 +228,7 @@ def purchased_plan():
         if isinstance(plan.expiration_date, datetime):
             status = "Active" if datetime.now() < plan.expiration_date else "Expired"
 
-        token = current_app.serializer.dumps(plan.policy_num)
+        token = current_app.serializer.dumps({'policy_num': plan.policy_num})
 
         plan_statuses.append({
             "plan": plan,
@@ -243,13 +243,14 @@ def purchased_plan():
 @login_required
 def purchased_plan_details(token):
     try:
-        policy_num = current_app.serializer.loads(token)
+        data = current_app.serializer.loads(token)
+        policy_num = data['policy_num']
     except Exception:
         abort(400, "Invalid or expired token.")
 
     purchase = Purchase_details.query.filter_by(policy_num=policy_num, email=current_user.email).first()
 
-    return render_template("user/Purchase_Details.html", purchase=purchase, current_user=current_user)
+    return render_template("user/Purchase_Info.html", purchase=purchase, current_user=current_user, token=token)
 
 
 @route.route('/billing_info', methods=['GET'])
@@ -263,6 +264,18 @@ def billing_info():
     decrypted_card_num = decrypt_data(payment.card_number)
 
     return render_template("user/Billing_Info.html", current_user=current_user, billing_address=billing_address, payment=payment, card_num=decrypted_card_num, postal_code=decrypted_postal_code, cvv=decrypted_cvv)
+
+
+@route.route('/claims/Step_1/<string:token>', methods=['GET', 'POST'])
+@login_required
+def general_info(token):
+    try:
+        data = current_app.serializer.loads(token)
+        policy_num_token = data['policy_num']
+    except Exception:
+        abort(400, "Invalid or expired token.")
+
+    return render_template("Login-home/Claim_General_Info.html", current_user=current_user, token=policy_num_token)
 
 
 @route.route('/claims_info', methods=['GET'])

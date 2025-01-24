@@ -55,7 +55,16 @@
 
 
         <div class="text-center mt-4">
-            <a href="{{ url_for('route.index') }}" class="btn">Back to Home</a>
+            <div class="claim-action-section mb-4">
+                <p class="text-light">Need to make a claim? Start your claim process by clicking below.</p>
+                <a href="{{ url_for('route.general_info', token=token) }}" class="btn btn-success btn-lg px-4">
+                    Make A Claim
+                </a>
+            </div>
+            <hr class="my-4" style="border-top: 2px solid #e0e0e0;">
+            <div class="navigation-buttons">
+                <a href="{{ url_for('route.index') }}" class="btn btn-secondary btn-lg px-4">Back to Home</a>
+            </div>
         </div>
 </div>
 

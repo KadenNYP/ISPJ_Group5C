@@ -13,7 +13,7 @@ def create_app():
     app.config['SESSION_COOKIE_SECURE'] = True
     app.config['SESSION_COOKIE_HTTPONLY'] = True
     app.serializer = URLSafeSerializer(app.config['SECRET_KEY'])
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:password123@localhost/website'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://website:password123@localhost/website'
     db.init_app(app)
 
     from .auth import auth as auth_blueprint

@@ -2,8 +2,65 @@
 
 {% extends "base.html" %}
 
-{% block title %}Purchase & Payment{% endblock %}
+{% block title %}Claims{% endblock %}
 
 {% block content %}
+<div class="purchase-p-info-form shadow-lg p-5">
 
+    <div class="mb-4">
+        <div class="progress" style="height: 15px;">
+            <div class="progress-bar bg-normal" role="progressbar" style="width: 33%;" aria-valuenow="33" aria-valuemin="0" aria-valuemax="100">
+                Step 1 of 3
+            </div>
+        </div>
+    </div>
+
+    <h2 class="text-center text-white mb-4">Personal Information</h2>
+    <form autocomplete="off" action="" method="POST" id="payment_details">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="fname" class="form-label">First Name</label>
+                <input type="text" class="form-control" id="fname" name="fname" placeholder="Your First Name" value="{{ current_user.first_name }}" readonly>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="lname" class="form-label">Last Name</label>
+                <input type="text" class="form-control" id="lname" name="lname" placeholder="Your Last Name" value="{{ current_user.last_name }}" readonly>
+            </div>
+        </div>
+        <div class="mb-3">
+
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="Your Email Address" value="{{ current_user.email }}" readonly>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="policy_num" class="form-label">Policy Num</label>
+                <input type="text" class="form-control" id="policy_num" name="policy_num" placeholder="Policy_Num" value="{{ policy_num }}" readonly>
+            </div>
+        </div>
+
+        <h4 class="text-white mt-4">General Info</h4>
+        <div class="mb-3">
+            <label for="date" class="form-label">Date</label>
+            <input type="text" class="form-control" id="date" name="date" value="{{ today_date }}" readonly>
+        </div>
+        <div class="mb-3">
+            <label for="reason" class="form-label">Reason For Claim</label>
+            <textarea class="form-control" id="reason" name="reason" rows="5" placeholder="Type your reason here" required></textarea>
+        </div>
+
+        <div class="mb-3">
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="consent" name="consent" required>
+                <label for="consent" class="form-check-label">I consent to the collection and use of my data as outlined in the Privacy Policy.</label>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary btn-lg px-4">Next</button>
+        </div>
+    </form>
+</div>
 {% endblock %}

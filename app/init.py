@@ -2,6 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from itsdangerous import URLSafeSerializer
+import os
 
 
 db = SQLAlchemy()
@@ -14,6 +15,11 @@ def create_app():
     app.config['SESSION_COOKIE_HTTPONLY'] = True
     app.serializer = URLSafeSerializer(app.config['SECRET_KEY'])
     app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://website:password123@localhost/website'
+
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    app.config['UPLOAD_FOLDER'] = os.path.join(basedir, 'static/uploads')
+    app.config['ALLOWED_EXTENSIONS'] = {'pdf', 'jpg','jpeg', 'png'}
+
     db.init_app(app)
 
     from .auth import auth as auth_blueprint

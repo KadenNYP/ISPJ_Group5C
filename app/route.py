@@ -2,22 +2,24 @@ import time
 from flask import Blueprint, render_template, redirect, url_for, flash, request, session, send_from_directory
 from flask import abort, current_app
 from flask_login import login_required
+from werkzeug.utils import secure_filename
 from .Security_Features_Function.Encryption import encrypt_data
 from .Security_Features_Function.Contact_Anonymization import anonymize_old_records
 from .payment_utils import determine_plan_details, extract_payment_method
 from .models import *
 from .auth import current_user
 import random
+import os
 from datetime import timedelta, datetime
 
 
 route = Blueprint('route', __name__)
 
-'''
-@route.before_app_request
-def before_request():
-    user=current_user
-'''
+ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg'}
+
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 @route.route('/')
@@ -275,7 +277,111 @@ def general_info(token):
     except Exception:
         abort(400, "Invalid or expired token.")
 
-    return render_template("Login-home/Claim_General_Info.html", current_user=current_user, token=policy_num_token)
+    if request.method == 'POST':
+        reason_for_claim = request.form.get('reason')
+        date_of_claim = datetime.now().strftime('%Y-%m-%d')
+        consent = request.form.get('consent')
+
+        if not reason_for_claim or not consent:
+            flash("Please fill in all required fields and agree to the privacy policy.", "danger")
+            return redirect(url_for('route.general_info'))
+
+        claim = Claim_general_info(
+            user_id=current_user.id,
+            first_name=current_user.first_name,
+            email=current_user.email,
+            policy_num=policy_num_token,
+            reason_for_claim=reason_for_claim,
+            date_of_claim=date_of_claim,
+        )
+
+        db.session.add(claim)
+        db.session.commit()
+
+        new_token = current_app.serializer.dumps({'policy_num': policy_num_token})
+
+        return redirect(url_for('route.specific_info', token=new_token))
+
+    return render_template("Login-home/Claim_General_Info.html", current_user=current_user, token=policy_num_token, policy_num=policy_num_token, today_date=datetime.now().strftime('%Y-%m-%d'))
+
+
+@route.route('/claims/Step_2/<string:token>', methods=['GET', 'POST'])
+@login_required
+def specific_info(token):
+    try:
+        data = current_app.serializer.loads(token)
+        policy_num_token = data['policy_num']
+    except Exception:
+        abort(400, "Invalid or expired token.")
+
+    if request.method == 'POST':
+        hospital_name = request.form.get('hospital_name')
+        location = request.form.get('hc_address')
+        medical_receipts = request.files.get('medical_receipts')
+
+        if not hospital_name or not location:
+            flash("Please fill in all required fields.", "danger")
+            return redirect(url_for('route.specific_info', token=policy_num_token))
+
+        saved_files = {}
+
+        if medical_receipts:
+            MAX_FILE_SIZE = 5 * 1024 * 1024
+
+            if len(medical_receipts.read()) > MAX_FILE_SIZE:
+                flash(f"The file for medical receipt is too large. Maximum allowed size is 5MB.", "danger")
+                return redirect(url_for('route.specific_info', token=token))
+
+            medical_receipts.seek(0)
+
+            if allowed_file(medical_receipts.filename):
+                filename = secure_filename(medical_receipts.filename)
+                upload_folder = current_app.config['UPLOAD_FOLDER']
+                os.makedirs(upload_folder, exist_ok=True)
+                file_path = os.path.join(upload_folder, filename)
+                medical_receipts.save(file_path)
+                saved_files['medical_receipts'] = filename
+            else:
+                flash("Invalid file type for medical receipt.", "danger")
+                return redirect(url_for('route.specific_info', token=token))
+
+            claim = Claim_specific_info(
+                user_id=current_user.id,
+                first_name=current_user.first_name,
+                email=current_user.email,
+                hospital_name=hospital_name,
+                location=location,
+                medical_receipts=saved_files.get('medical_receipts')
+            )
+
+            db.session.add(claim)
+            db.session.commit()
+
+            claim_num = "CLM" + str(random.randint(10000, 999999))
+            while ClaimID.query.filter_by(claim_num=claim_num).first():
+                claim_num = "CLM" + str(random.randint(10000, 999999))
+
+            general_info = Claim_general_info.query.filter_by(email=current_user.email).order_by(Claim_general_info.id.desc()).first()
+
+            claim_meta = ClaimID(user_id=current_user.id, first_name=current_user.first_name, email=current_user.email, claim_num=claim_num, specific_info=claim, general_info=general_info)
+
+            db.session.add(claim_meta)
+            db.session.commit()
+
+            new_token = current_app.serializer.dumps({'policy_num': policy_num_token})
+            return redirect(url_for('route.claim_confirmation', token=new_token))
+
+    return render_template("Login-home/Claim_Specific_Info.html", current_user=current_user, token=policy_num_token)
+
+
+@route.route('/claims/confirmation', methods=['GET'])
+@login_required
+def claim_confirmation():
+    general_info = Claim_general_info.query.filter_by(email=current_user.email).first()
+    specific_info = Claim_specific_info.query.filter_by(email=current_user.email).first()
+    claim_meta = ClaimID.query.filter_by(email=current_user.email).first()
+
+    return render_template("login-Home/Claim_Confirmation.html", current_user=current_user, general_info=general_info, specific_info=specific_info, claim_meta=claim_meta)
 
 
 @route.route('/claims_info', methods=['GET'])

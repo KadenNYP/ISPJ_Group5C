@@ -112,3 +112,46 @@ class Purchase_details(db.Model):
     def __repr__(self):
         return f"<Purchase {self.policy_num} - {self.first_name} - {self.effective_date}>"
 
+
+class Claim_general_info(db.Model):
+    __tablename__ = 'Claims_General'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    first_name = db.Column(db.String(150), nullable=False)
+    email = db.Column(db.String(150), nullable=False)
+    policy_num = db.Column(db.String(10), nullable=False)
+    reason_for_claim = db.Column(db.String(255), nullable=False)
+    date_of_claim = db.Column(db.TIMESTAMP, server_default=func.current_timestamp(), nullable=False)
+    status = db.Column(db.String(50), default="In Progress")
+
+    user = db.relationship('User', backref=db.backref('Claims_General', lazy=True))
+
+
+class Claim_specific_info(db.Model):
+    __tablename__ = 'Claims_Specific'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    first_name = db.Column(db.String(150), nullable=False)
+    email = db.Column(db.String(150), nullable=False)
+    hospital_name = db.Column(db.String(50), nullable=False)
+    location = db.Column(db.String(100), nullable=False)
+    medical_receipts = db.Column(db.String(255), nullable=True)
+
+    user = db.relationship('User', backref=db.backref('Claims_Specific', lazy=True))
+
+
+class ClaimID(db.Model):
+    __tablename__ = 'claim_metadata'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    first_name = db.Column(db.String(150), nullable=False)
+    email = db.Column(db.String(150), nullable=False)
+    claim_num = db.Column(db.String(10), unique=True, nullable=False)
+    general_id = db.Column(db.Integer, db.ForeignKey('Claims_General.id'), nullable=False)
+    specific_id = db.Column(db.Integer, db.ForeignKey('Claims_Specific.id'), nullable=False)
+
+    general_info = db.relationship('Claim_general_info', backref=db.backref('claim_metadata', lazy=True))
+    specific_info = db.relationship('Claim_specific_info', backref=db.backref('claim_metadata', lazy=True))

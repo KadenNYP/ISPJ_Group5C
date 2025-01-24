@@ -1,0 +1,55 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='css/purchase.css') }}">
+
+{% extends "base.html" %}
+
+{% block title %}Claims{% endblock %}
+
+{% block content %}
+<div class="purchase-p-info-form shadow-lg p-5">
+
+    <div class="mb-4">
+        <div class="progress" style="height: 15px;">
+            <div class="progress-bar bg-normal" role="progressbar" style="width: 66%;" aria-valuenow="66" aria-valuemin="0" aria-valuemax="100">
+                Step 2 of 3
+            </div>
+        </div>
+    </div>
+
+    <h2 class="text-center text-white mb-4">Health Specific Information</h2>
+    <form autocomplete="off" action="" method="POST" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="hospital_name" class="form-label">Hospital/Clinic Name</label>
+                <input type="text" class="form-control" id="hospital_name" name="hospital_name" placeholder="Enter Hospital / Clinic Name" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="hc_address" class="form-label">Hospital/Clinic Address</label>
+                <input type="text" class="form-control" id="hc_address" name="hc_address" placeholder="Enter Location" required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="mb-3">
+                <label for="medical_receipts" class="form-label">Medical Receipts/Bills (PDF/JPG/PNG, max 5MB)</label>
+                <input type="file" class="form-control" id="medical_receipts" name="medical_receipts" accept=".pdf,.jpg,.jpeg,.png" required>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="consent" name="consent" required>
+                <label for="consent" class="form-check-label">I consent to the collection and use of my data as outlined in the Privacy Policy.</label>
+            </div>
+        </div>
+
+        <div id="processing-message" class="alert alert-info text-center" style="display: none;">
+        Processing your claim, please wait a while...
+        </div>
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary btn-lg px-4">Submit</button>
+        </div>
+    </form>
+</div>
+
+<script src="{{ url_for('static', filename='js/payment.js') }}"></script>
+{% endblock %}

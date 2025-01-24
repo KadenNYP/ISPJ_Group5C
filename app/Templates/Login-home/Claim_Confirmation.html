@@ -1,0 +1,50 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='css/purchase.css') }}">
+
+{% extends "base.html" %}
+
+{% block title %}Claims Confirmation{% endblock %}
+
+{% block content %}
+<div class="purchase-p-info-form shadow-lg p-5">
+
+    <div class="mb-4">
+        <div class="progress" style="height: 15px;">
+            <div class="progress-bar bg-success" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                Step 3 of 3, 100% Completion
+            </div>
+        </div>
+    </div>
+
+    <h2 class="text-center text-white mb-4">Thank You! Your claim has been submitted successful</h2>
+
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label><strong>Claim Number:</strong></label>
+                    <input type="text" class="form-control" value="{{ claim_meta.claim_num }}" disabled>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label><strong>Policy Name:</strong></label>
+                    <input type="text" class="form-control" value="{{ general_info.policy_num }}" disabled>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label><strong>Hospital Name:</strong></label>
+                    <input type="text" class="form-control" value="{{ specific_info.hospital_name }}" disabled>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label><strong>Claim Reason:</strong></label>
+                    <input type="text" class="form-control" value="{{ general_info.reason_for_claim }}" disabled>
+                </div>
+            </div>
+
+
+        <div class="text-center mt-4">
+            <a href="{{ url_for('route.index') }}" class="btn btn-success btn-lg px-4">Back to Home</a>
+        </div>
+</div>
+
+<script src="{{ url_for('route.serve_security_file', filename='CopyPaste_Restriction.js') }}"></script>
+{% endblock %}

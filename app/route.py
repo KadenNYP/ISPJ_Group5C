@@ -279,7 +279,7 @@ def general_info(token):
 
     if request.method == 'POST':
         reason_for_claim = request.form.get('reason')
-        date_of_claim = datetime.now().strftime('%Y-%m-%d')
+        date_of_claim = datetime.now()
         consent = request.form.get('consent')
 
         if not reason_for_claim or not consent:
@@ -377,9 +377,9 @@ def specific_info(token):
 @route.route('/claims/confirmation', methods=['GET'])
 @login_required
 def claim_confirmation():
-    general_info = Claim_general_info.query.filter_by(email=current_user.email).first()
-    specific_info = Claim_specific_info.query.filter_by(email=current_user.email).first()
-    claim_meta = ClaimID.query.filter_by(email=current_user.email).first()
+    general_info = Claim_general_info.query.filter_by(email=current_user.email).order_by(Claim_general_info.id.desc()).first()
+    specific_info = Claim_specific_info.query.filter_by(email=current_user.email).order_by(Claim_specific_info.id.desc()).first()
+    claim_meta = ClaimID.query.filter_by(email=current_user.email).order_by(ClaimID.id.desc()).first()
 
     return render_template("login-Home/Claim_Confirmation.html", current_user=current_user, general_info=general_info, specific_info=specific_info, claim_meta=claim_meta)
 
@@ -387,7 +387,20 @@ def claim_confirmation():
 @route.route('/claims_info', methods=['GET'])
 @login_required
 def claim_info():
-    return render_template("user/Claim_Info.html", current_user=current_user)
+    claims = db.session.query(ClaimID, Claim_general_info).join(Claim_general_info, Claim_general_info.id == ClaimID.general_id).filter(ClaimID.email == current_user.email).all()
+    claim_lists = []
+
+    for claim, general_info in claims:
+
+        token = current_app.serializer.dumps({'claim_num': claim.claim_num})
+
+        claim_lists.append({
+            "claim": claim,
+            "general_info": general_info,
+            "token": token
+        })
+
+    return render_template("user/Claim_Info_list.html", current_user=current_user, claim_lists=claim_lists)
 
 
 @route.route('/security_features/<path:filename>')

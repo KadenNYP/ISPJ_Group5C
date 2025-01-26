@@ -123,7 +123,6 @@ class Claim_general_info(db.Model):
     policy_num = db.Column(db.String(10), nullable=False)
     reason_for_claim = db.Column(db.String(255), nullable=False)
     date_of_claim = db.Column(db.TIMESTAMP, server_default=func.current_timestamp(), nullable=False)
-    status = db.Column(db.String(50), default="In Progress")
 
     user = db.relationship('User', backref=db.backref('Claims_General', lazy=True))
 
@@ -152,6 +151,7 @@ class ClaimID(db.Model):
     claim_num = db.Column(db.String(10), unique=True, nullable=False)
     general_id = db.Column(db.Integer, db.ForeignKey('Claims_General.id'), nullable=False)
     specific_id = db.Column(db.Integer, db.ForeignKey('Claims_Specific.id'), nullable=False)
+    status = db.Column(db.String(50), default="In Progress")
 
     general_info = db.relationship('Claim_general_info', backref=db.backref('claim_metadata', lazy=True))
     specific_info = db.relationship('Claim_specific_info', backref=db.backref('claim_metadata', lazy=True))

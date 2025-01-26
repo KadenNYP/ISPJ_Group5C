@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='css/purchased_plans_claims_list.css') }}">
+
+{% extends "base.html" %}
+
+{% block title %}Plan Details{% endblock %}
+
+{% block content %}
+<div class="purchase-p-info-form shadow-lg p-5">
+    {% for claims in claim_lists %}
+    <h2 class="text-center text-white mb-4">{{ claims.claim.claim_num }}</h2>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <p><strong>Purchase Date:</strong> {{ claims.general_info.date_of_claim.strftime('%d %B %Y') }}</p>
+            <p><strong>Status:</strong> {{ claims.claim.status }}</p>
+            <div class="text-center">
+                <a href="" class="btn btn-primary btn-lg px-4">Click to view More</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

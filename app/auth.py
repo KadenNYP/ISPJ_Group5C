@@ -125,7 +125,7 @@ def profile():
     has_billing_info = db.session.query(BillingAddress).filter_by(email=current_user.email).first() is not None
     has_payment_info = db.session.query(Payment).filter_by(email=current_user.email).first() is not None
     has_complete_info = has_billing_info and has_payment_info
-    has_claim_info = False
+    has_claim_info = db.session.query(ClaimID).filter_by(email=current_user.email).first() is not None
 
     return render_template('user/profile.html', user=current_user, has_purchased_plan=has_purchased_plan, has_billing_info=has_complete_info, has_claim_info=has_claim_info)
 
@@ -148,12 +148,12 @@ def userdb():
 
     return render_template('user/userdb.html', role_filter=role_filter, user_list=user_list, count=count, mask_email=mask_email)
 
+
 @auth.route('view_billing_address', methods=["GET", "POST"])
 @login_required
 def view_billing_address():
     user_id = request.args.get('user_id', 0)
     print(user_id)
-
 
     billingaddress_list = BillingAddress.query.filter(BillingAddress.user_id == user_id).first()
     

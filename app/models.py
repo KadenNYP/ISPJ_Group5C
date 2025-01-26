@@ -3,7 +3,6 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func
 from sqlalchemy.sql import expression
 from .init import db
-from .Security_Features_Function.Encryption import *
 
 
 class Role(db.Model):
@@ -51,7 +50,7 @@ class BillingAddress(db.Model):
     __tablename__ = 'billing_addresses'
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=True)
     fname = db.Column(db.String(150), nullable=False)
     email = db.Column(db.String(150), nullable=False)
     street_address = db.Column(db.String(255), nullable=False)
@@ -61,7 +60,7 @@ class BillingAddress(db.Model):
     created_at = db.Column(db.TIMESTAMP, server_default=func.current_timestamp(), nullable=False)
     updated_at = db.Column(db.TIMESTAMP, server_default=func.current_timestamp(), server_onupdate=func.current_timestamp())
 
-    user = db.relationship('User', backref=db.backref('billing_addresses', lazy=True))
+    user = db.relationship('User', backref=db.backref('billing_addresses', lazy=True, passive_deletes=True))
 
     def __init__(self, user_id, fname, email, street_address, city, postal_code, country, created_at):
         self.user_id = user_id
@@ -78,7 +77,7 @@ class Payment(db.Model):
     __tablename__ = 'payments'
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=True)
     fname = db.Column(db.String(150), nullable=False)
     email = db.Column(db.String(150), nullable=False)
     cardholder_name = db.Column(db.String(100), nullable=False)
@@ -88,8 +87,8 @@ class Payment(db.Model):
     created_at = db.Column(db.TIMESTAMP, server_default=func.current_timestamp(), nullable=False)
     updated_at = db.Column(db.TIMESTAMP, server_default=func.current_timestamp(), server_onupdate=func.current_timestamp())
 
-    user = db.relationship('User', backref=db.backref('payments', lazy=True))
-    purchases = db.relationship('Purchase_details', backref='payment', lazy=True)
+    user = db.relationship('User', backref=db.backref('payments', lazy=True, passive_deletes=True))
+    purchases = db.relationship('Purchase_details', backref='payment', lazy=True, passive_deletes=True)
 
     def __repr__(self):
         return f"<Payment id={self.id} user_id={self.user_id}>"
@@ -107,7 +106,7 @@ class Purchase_details(db.Model):
     effective_date = db.Column(db.DateTime, nullable=False)
     expiration_date = db.Column(db.DateTime, nullable=False)
     payment_method = db.Column(db.String(50))
-    payment_id = db.Column(db.Integer, db.ForeignKey('payments.id'), nullable=False)
+    payment_id = db.Column(db.Integer, db.ForeignKey('payments.id', ondelete='CASCADE'), nullable=False)
 
     def __repr__(self):
         return f"<Purchase {self.policy_num} - {self.first_name} - {self.effective_date}>"
@@ -117,41 +116,41 @@ class Claim_general_info(db.Model):
     __tablename__ = 'Claims_General'
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=True)
     first_name = db.Column(db.String(150), nullable=False)
     email = db.Column(db.String(150), nullable=False)
     policy_num = db.Column(db.String(10), nullable=False)
     reason_for_claim = db.Column(db.String(255), nullable=False)
     date_of_claim = db.Column(db.TIMESTAMP, server_default=func.current_timestamp(), nullable=False)
 
-    user = db.relationship('User', backref=db.backref('Claims_General', lazy=True))
+    user = db.relationship('User', backref=db.backref('Claims_General', lazy=True, passive_deletes=True))
 
 
 class Claim_specific_info(db.Model):
     __tablename__ = 'Claims_Specific'
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=True)
     first_name = db.Column(db.String(150), nullable=False)
     email = db.Column(db.String(150), nullable=False)
     hospital_name = db.Column(db.String(50), nullable=False)
     location = db.Column(db.String(100), nullable=False)
     medical_receipts = db.Column(db.String(255), nullable=True)
 
-    user = db.relationship('User', backref=db.backref('Claims_Specific', lazy=True))
+    user = db.relationship('User', backref=db.backref('Claims_Specific', lazy=True, passive_deletes=True))
 
 
 class ClaimID(db.Model):
     __tablename__ = 'claim_metadata'
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=True)
     first_name = db.Column(db.String(150), nullable=False)
     email = db.Column(db.String(150), nullable=False)
     claim_num = db.Column(db.String(10), unique=True, nullable=False)
-    general_id = db.Column(db.Integer, db.ForeignKey('Claims_General.id'), nullable=False)
-    specific_id = db.Column(db.Integer, db.ForeignKey('Claims_Specific.id'), nullable=False)
+    general_id = db.Column(db.Integer, db.ForeignKey('Claims_General.id', ondelete='CASCADE'), nullable=False)
+    specific_id = db.Column(db.Integer, db.ForeignKey('Claims_Specific.id', ondelete='CASCADE'), nullable=False)
     status = db.Column(db.String(50), default="In Progress")
 
-    general_info = db.relationship('Claim_general_info', backref=db.backref('claim_metadata', lazy=True))
-    specific_info = db.relationship('Claim_specific_info', backref=db.backref('claim_metadata', lazy=True))
+    general_info = db.relationship('Claim_general_info', backref=db.backref('claim_metadata', lazy=True, passive_deletes=True))
+    specific_info = db.relationship('Claim_specific_info', backref=db.backref('claim_metadata', lazy=True, passive_deletes=True))

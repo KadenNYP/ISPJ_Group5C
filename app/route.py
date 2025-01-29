@@ -3,7 +3,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request,
 from flask import abort, current_app
 from flask_login import login_required
 from werkzeug.utils import secure_filename
-from .Security_Features_Function.Encryption import encrypt_data
+from .Security_Features_Function.Encryption import encrypt_data, decrypt_data
 from .Security_Features_Function.Contact_Anonymization import anonymize_old_records
 from .payment_utils import determine_plan_details, extract_payment_method
 from .models import *

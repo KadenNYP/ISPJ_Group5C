@@ -22,6 +22,6 @@ def extract_payment_method(card_number):
     elif card_number.startswith('3'):
         card_type = "American Express"
     else:
-        card_type = "Unknown"
+        card_type = "Others"
 
     return f"{card_type} ****{card_number[-4:]}"

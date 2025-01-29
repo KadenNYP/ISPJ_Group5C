@@ -1,3 +1,9 @@
 # Default ignored files
 /shelf/
 /workspace.xml
+
+# Ignore all contents in the uploads folder
+/uploads/*
+
+# But keep the uploads folder itself
+!/uploads/

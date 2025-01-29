@@ -21,6 +21,7 @@ try:
     my_cursor = mydb.cursor()
 
     my_cursor.execute("USE website")
+    my_cursor.execute("SET FOREIGN_KEY_CHECKS = 0;")
 
     # Check and populate the roles table
     roles = ['Owner', 'Staff', 'Customer']
@@ -40,6 +41,24 @@ try:
     my_cursor.execute(insert_user_query, default_owner)
     my_cursor.execute(insert_user_query, default_staff)
     my_cursor.execute(insert_user_query, default_customer)
+
+    #delete the billing_addresses table data
+    my_cursor.execute("delete from billing_addresses")
+
+    # Insert billing addresses for the three users
+    billing_addresses = [
+        (1, "Owner", "owner@owner.owner", "123 Owner St", "OwnerCity", "10001", "OwnerCountry", '2025-01-01 00:00:00'),
+        (2, "Staff", "staff@staff.staff", "456 Staff Ave", "StaffCity", "20002", "StaffCountry", '2025-01-01 00:00:00'),
+        (3, "Customer", "customer@customer.customer", "789 Customer Blvd", "CustomerCity", "30003", "CustomerCountry", '2025-01-01 00:00:00')
+    ]
+
+    insert_billing_query = """
+        INSERT INTO billing_addresses (user_id, fname, email, street_address, city, postal_code, country, created_at)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+    """
+
+    for address in billing_addresses:
+        my_cursor.execute(insert_billing_query, address)
 
     # Commit the transaction
     mydb.commit()  

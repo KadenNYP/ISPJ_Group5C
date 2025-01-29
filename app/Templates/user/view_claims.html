@@ -1,0 +1,62 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='css/userdb.css') }}">
+
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="userdb-container shadow-lg p-5">
+    <h1 class="text-white text-center">Claims List</h1>
+    {% if count > 0 %}
+        <h1 class="text-white text-center">All Claims</h1>
+    {% else %}
+        <div class="text-white text-center">
+            <p>No claims found.</p>
+        </div>
+    {% endif %}  
+
+    {% if billingaddress_list == 0 %}
+        <div class="text-white text-center">
+            <p>There is no billing address.</p>
+        </div>
+    {% else %}    
+
+        {% if current_user.role_id == 2 %}
+        <!-- Claims Table -->
+        <div>
+            <table class="table text-white">
+                <thead>
+                    <tr>
+                        <th>Claim ID</th>
+                        <th>User ID</th>
+                        <th>First Name</th>
+                        <th>Email</th>
+                        <th>Claim Number</th>
+                        <th>Status</th>
+                        <th>View Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for claim in claim_list %}
+                    <tr>
+                        <td>{{ claim.id }}</td>
+                        <td>{{ claim.user_id }}</td>
+                        <td>{{ claim.first_name }}</td>
+                        <td>{{ mask_email(claim.email) }}</td>
+                        <td>{{ claim.claim_num }}</td>
+                        <td>{{ claim.status }}</td>
+                        <td>
+                            <!-- View Claim Details -->
+                            <form action="{{ url_for('auth.view_claims_details', general_id=claim.general_id, specific_id=claim.specific_id ) }}" method="POST">
+                                <input type="submit" class="btn btn-primary" value="View Claim Details">
+                            </form>
+                        <td>                    
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <h1 class="text-white text-center">You are not authorised to view this information</h1>
+        {% endif %}
+    {% endif %}
+</div>
+{% endblock %}

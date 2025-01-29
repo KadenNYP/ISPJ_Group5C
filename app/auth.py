@@ -155,10 +155,34 @@ def view_billing_address():
     user_id = request.args.get('user_id', 0)
     print(user_id)
 
-    billingaddress_list = BillingAddress.query.filter(BillingAddress.user_id == user_id).first()
+    billingaddress_list = BillingAddress.query.filter(BillingAddress.user_id == user_id).all()
     
     if billingaddress_list is None:
         billingaddress_list = 0
     print(billingaddress_list)
+
+    try:
+        count = len(billingaddress_list)
+    except:
+        count = 0
     
-    return render_template('user/view_billing_address.html', billingaddress_list=billingaddress_list)
+    return render_template('user/view_billing_address.html', billingaddress_list=billingaddress_list, count=count, mask_email=mask_email)
+
+@auth.route('view_claims', methods=["GET", "POST"])
+@login_required
+def view_claims():
+    user_id = request.args.get('user_id', 0)
+    print(user_id)
+
+    claim_list = ClaimID.query.filter(ClaimID.user_id == user_id).all()
+    
+    if claim_list is None:
+        claim_list = 0
+    print(claim_list)
+
+    try:
+        count = len(claim_list)
+    except:
+        count = 0
+    
+    return render_template('user/view_claims.html', claim_list=claim_list, count=count, mask_email=mask_email)

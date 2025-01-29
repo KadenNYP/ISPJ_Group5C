@@ -66,8 +66,8 @@
                             </form>
                         </td>
                         <td>
-                            <!-- View Button -->
-                            <form action="{{ url_for('auth.view_billing_address', user_id=row.id) }}" method="GET">
+                            <!-- View Billing Address Button -->
+                            <form action="{{ url_for('auth.view_billing_address', user_id=row.id) }}" method="POST">
                                 <input type="submit" class="btn btn-primary" value="View Billing Address">
                             </form>
                         <td>
@@ -107,7 +107,9 @@
                 </tbody>
             </table>
         </div>
-        {% endif %}
+        {% else %}
+        <h1 class="text-white text-center">You are not authorised to view this information</h1>
+        {% endif %}    
     </div>
 </div>
 {% endblock %}

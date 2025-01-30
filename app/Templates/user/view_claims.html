@@ -5,9 +5,7 @@
 {% block content %}
 <div class="userdb-container shadow-lg p-5">
     <h1 class="text-white text-center">Claims List</h1>
-    {% if count > 0 %}
-        <h1 class="text-white text-center">All Claims</h1>
-    {% else %}
+    {% if count == 0 %}
         <div class="text-white text-center">
             <p>No claims found.</p>
         </div>
@@ -31,7 +29,7 @@
                         <th>Email</th>
                         <th>Claim Number</th>
                         <th>Status</th>
-                        <th>View Details</th>
+                        <th>View Info</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -44,9 +42,9 @@
                         <td>{{ claim.claim_num }}</td>
                         <td>{{ claim.status }}</td>
                         <td>
-                            <!-- View Claim Details -->
-                            <form action="{{ url_for('auth.view_claims_details', general_id=claim.general_id, specific_id=claim.specific_id ) }}" method="POST">
-                                <input type="submit" class="btn btn-primary" value="View Claim Details">
+                            <!-- View Claim Info -->
+                            <form action="{{ url_for('auth.view_claims_info', claim_id=claim.id, general_id=claim.general_id, specific_id=claim.specific_id ) }}" method="POST">
+                                <input type="submit" class="btn btn-primary" value="View Claim Info">
                             </form>
                         <td>                    
                     </tr>

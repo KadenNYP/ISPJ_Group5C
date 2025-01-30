@@ -7,6 +7,28 @@
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
     }
 
+.userdb-container .claims-info-table {
+    table-layout: auto;
+    width: auto;
+    margin: 0 auto; 
+}
+
+.userdb-container .claims-info-table th {
+    white-space: nowrap;
+    padding: 8px 12px;
+    text-align: left; 
+}
+
+.userdb-container .claims-info-table td {
+    white-space: nowrap;
+    padding: 8px 12px;
+    text-align: left;
+}   
+
+.userdb-container .row > div {
+    margin-bottom: 20px;
+}
+
 .dropdown-item {
     display: block;
     padding: 10px 15px;
@@ -26,4 +48,14 @@
 .dropdown-button:hover .dropdown-menu {
     transform: scale(1.1);
     display: block;
+}
+
+.claim-link a {
+    color: #ffffff;
+    text-decoration: none; 
+    font-weight: bold;
+}
+
+.claim-link a:hover {
+    text-decoration: underline;
 }

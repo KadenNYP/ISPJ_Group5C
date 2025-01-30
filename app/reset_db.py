@@ -60,6 +60,55 @@ try:
     for address in billing_addresses:
         my_cursor.execute(insert_billing_query, address)
 
+    # Insert Claims_General entries for the three users
+    claims_general = [
+        (1, "Owner", "owner@owner.owner", "POL001", "Accident Claim", '2025-01-10 10:00:00'),
+        (2, "Staff", "staff@staff.staff", "POL002", "Health Claim", '2025-01-11 11:30:00'),
+        (3, "Customer", "customer@customer.customer", "POL003", "Property Claim", '2025-01-12 14:45:00')
+    ]
+
+    insert_claims_general_query = """
+        INSERT INTO Claims_General (user_id, first_name, email, policy_num, reason_for_claim, date_of_claim)
+        VALUES (%s, %s, %s, %s, %s, %s)
+    """
+
+    claim_general_ids = []
+    for general in claims_general:
+        my_cursor.execute(insert_claims_general_query, general)
+        claim_general_ids.append(my_cursor.lastrowid)
+
+    # Insert Claims_Specific entries for the three users
+    claims_specific = [
+        (1, "Owner", "owner@owner.owner", "City Hospital", "New York", "receipt_owner.pdf"),
+        (2, "Staff", "staff@staff.staff", "Health Clinic", "Los Angeles", "receipt_staff.pdf"),
+        (3, "Customer", "customer@customer.customer", "Property Repairs Inc.", "Chicago", "receipt_customer.pdf")
+    ]
+
+    insert_claims_specific_query = """
+        INSERT INTO Claims_Specific (user_id, first_name, email, hospital_name, location, medical_receipts)
+        VALUES (%s, %s, %s, %s, %s, %s)
+    """
+
+    claim_specific_ids = []
+    for specific in claims_specific:
+        my_cursor.execute(insert_claims_specific_query, specific)
+        claim_specific_ids.append(my_cursor.lastrowid)
+
+    # Insert claim_metadata entries linking Claims_General and Claims_Specific
+    claims_metadata = [
+        (1, "Owner", "owner@owner.owner", "CLM001", claim_general_ids[0], claim_specific_ids[0]),
+        (2, "Staff", "staff@staff.staff", "CLM002", claim_general_ids[1], claim_specific_ids[1]),
+        (3, "Customer", "customer@customer.customer", "CLM003", claim_general_ids[2], claim_specific_ids[2])
+    ]
+
+    insert_claim_metadata_query = """
+        INSERT INTO claim_metadata (user_id, first_name, email, claim_num, general_id, specific_id, status)
+        VALUES (%s, %s, %s, %s, %s, %s, %s)
+    """
+
+    for metadata in claims_metadata:
+        my_cursor.execute(insert_claim_metadata_query, (*metadata, "In Progress"))
+
     # Commit the transaction
     mydb.commit()  
 

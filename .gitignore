@@ -5,5 +5,8 @@
 # Ignore all contents in the uploads folder
 /uploads/*
 
-# But keep the uploads folder itself
+# Keep the uploads folder itself
 !/uploads/
+
+# Ignore the launch file
+.vscode/launch.json

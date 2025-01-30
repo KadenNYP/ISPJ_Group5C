@@ -1,0 +1,104 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='css/userdb.css') }}">
+
+
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="userdb-container mt-5 ">
+    <h1 class="text-center text-white mb-4">Claim Info</h1>
+    <div class="row w-100">
+        <!-- General Information Table -->
+        <div class="col-md-6 justify-content-center">
+            <h3 class="text-white text-center">General Information</h3>
+            <table class="table table-bordered text-white claims-info-table">
+                <tr>
+                    <th>Claim ID</th>
+                    <td>{{ general_info.id }}</td>
+                </tr>
+                <tr>
+                    <th>User ID</th>
+                    <td>{{ general_info.user_id }}</td>
+                </tr>
+                <tr>
+                    <th>First Name</th>
+                    <td>{{ general_info.first_name }}</td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td>{{ mask_email(general_info.email) }}</td>
+                </tr>
+                <tr>
+                    <th>Policy Number</th>
+                    <td>{{ general_info.policy_num }}</td>
+                </tr>
+                <tr>
+                    <th>Reason for Claim</th>
+                    <td>{{ general_info.reason_for_claim }}</td>
+                </tr>
+                <tr>
+                    <th>Date of Claim</th>
+                    <td>{{ general_info.date_of_claim.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                </tr>
+                <tr>
+                    <th>Status</th>
+                    <td>{{ claim_info.status }}</td>
+                </tr>
+            </table>
+        </div>
+        
+        <!-- Specific Information Table -->
+        <div class="col-md-6">
+            <h3 class="text-white text-center">Specific Information</h3>
+            <table class="table table-bordered text-white claims-info-table">
+                <tr>
+                    <th>Specific ID</th>
+                    <td>{{ specific_info.id }}</td>
+                </tr>
+                <tr>
+                    <th>User ID</th>
+                    <td>{{ specific_info.user_id }}</td>
+                </tr>
+                <tr>
+                    <th>First Name</th>
+                    <td>{{ specific_info.first_name }}</td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td>{{ mask_email(specific_info.email) }}</td>
+                </tr>
+                <tr>
+                    <th>Hospital/Clinic Name</th>
+                    <td>{{ specific_info.hospital_name }}</td>
+                </tr>
+                <tr>
+                    <th>Location</th>
+                    <td>{{ specific_info.location }}</td>
+                </tr>
+                <tr>
+                    <th>Medical Receipts</th>
+                    <td class="claim-link">
+                        {% if specific_info.medical_receipts %}
+                            <a href="{{ url_for('static', filename='receipts/' + specific_info.medical_receipts) }}" target="_blank">View Receipt</a>
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    
+    <div class="Display-flex">
+        <!--Update Status button-->
+        <div class="text-center mt-4">
+            <form action="{{ url_for('auth.update_claim_status', claim_id=general_info.id) }}" method="POST">
+                <input type="submit" class="btn btn-primary" value="Update Status">
+            </form>
+
+        <!-- Back Button -->
+        <div class="text-center mt-4">
+            <a href="{{ url_for('auth.view_claims') }}" class="btn btn-secondary">Back to Claims List</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

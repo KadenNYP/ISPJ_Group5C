@@ -171,10 +171,8 @@ def view_billing_address():
 @auth.route('view_claims', methods=["GET", "POST"])
 @login_required
 def view_claims():
-    user_id = request.args.get('user_id', 0)
-    print(user_id)
 
-    claim_list = ClaimID.query.filter(ClaimID.user_id == user_id).all()
+    claim_list = ClaimID.query.all()
     
     if claim_list is None:
         claim_list = 0
@@ -186,3 +184,38 @@ def view_claims():
         count = 0
     
     return render_template('user/view_claims.html', claim_list=claim_list, count=count, mask_email=mask_email)
+
+@auth.route('view_claims_info', methods=["GET", "POST"])
+@login_required
+def view_claims_info():
+    claim_id = request.args.get('claim_id', 0)
+    general_id = request.args.get('general_id', 0)
+    specific_id = request.args.get('specific_id', 0)
+
+    print(f'claim_id is {claim_id}')
+    print(f'general_id is {general_id}')
+    print(f'specific_id is {specific_id}')
+
+    claim_info = ClaimID.query.filter(ClaimID.id == claim_id).first()
+    general_info = Claim_general_info.query.filter(ClaimID.id == general_id).first()
+    specific_info = Claim_specific_info.query.filter(ClaimID.id == specific_id).first()
+    
+    print(claim_info)
+    print(f'claim status is "{claim_info.status}"')
+    print(general_info)
+    print(specific_info)
+
+    return render_template('user/view_claims_info.html', claim_info=claim_info, general_info=general_info, specific_info=specific_info, mask_email=mask_email)
+
+@auth.route('update_claim_status', methods=["GET", "POST"])
+@login_required
+def update_claim_status():
+    claim_id = request.args.get('claim_id', 0)
+    status = request.args.get('status', 'In Progress')
+
+    claim_info = ClaimID.query.filter(ClaimID.id == claim_id).first()
+    claim_info.status = status
+
+    db.session.commit()
+
+    return redirect(url_for('auth.view_claims_info', claim_id=claim_id, general_id=claim_info.general_id, specific_id=claim_info.specific_id))

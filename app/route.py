@@ -129,7 +129,7 @@ def personal_info(plan_id):
 
             return redirect(url_for('route.payment_info', plan_id=plan_id))
 
-        except Exception as e:
+        except Exception:
             db.session.rollback()
             flash('An error occurred while saving your information. Please try again.', 'error')
             return redirect(url_for('route.personal_info', plan_id=plan_id))
@@ -185,14 +185,16 @@ def payment_info(plan_id):
             effective_date = datetime.now()
             expiration_date = effective_date + timedelta(days=365)
 
-            purchase = Purchase_details(first_name=current_user.first_name, email=current_user.email, plan_name=plan_name, plan_price=plan_price, policy_num=policy_num, effective_date=effective_date, expiration_date=expiration_date, payment_method=payment_method, payment_id=payment.id)
+            billing_address = BillingAddress.query.filter_by(user_id=current_user.id).order_by(BillingAddress.created_at.desc()).first()
+
+            purchase = Purchase_details(first_name=current_user.first_name, email=current_user.email, plan_name=plan_name, plan_price=plan_price, policy_num=policy_num, effective_date=effective_date, expiration_date=expiration_date, payment_method=payment_method, payment_id=payment.id, address_id=billing_address.id)
 
             db.session.add(purchase)
             db.session.commit()
 
             return redirect(url_for('route.purchase_confirmation', plan_id=plan_id))
 
-        except Exception as e:
+        except Exception:
             db.session.rollback()
             flash("An error occurred while processing your payment. Please try again.", "error")
             return redirect(url_for('route.payment_info', plan_id=plan_id))
@@ -255,17 +257,25 @@ def purchased_plan_details(token):
     return render_template("user/Purchase_Info.html", purchase=purchase, current_user=current_user, token=token)
 
 
-@route.route('/billing_info', methods=['GET'])
+@route.route('/billing_info/<string:token>', methods=['GET'])
 @login_required
-def billing_info():
-    billing_address = BillingAddress.query.filter_by(email=current_user.email).first()
-    payment = Payment.query.filter_by(email=current_user.email).first()
+def billing_info(token):
+    try:
+        data = current_app.serializer.loads(token)
+        policy_num = data['policy_num']
+    except Exception:
+        abort(400, "Invalid or expired token.")
+
+    purchase_details = Purchase_details.query.filter_by(policy_num=policy_num, email=current_user.email).first()
+
+    billing_address = BillingAddress.query.filter_by(id=purchase_details.address_id).first()
+    payment = Payment.query.filter_by(id=purchase_details.payment_id).first()
 
     decrypted_postal_code = decrypt_data(billing_address.postal_code)
     decrypted_cvv = decrypt_data(payment.cvv)
     decrypted_card_num = decrypt_data(payment.card_number)
 
-    return render_template("user/Billing_Info.html", current_user=current_user, billing_address=billing_address, payment=payment, card_num=decrypted_card_num, postal_code=decrypted_postal_code, cvv=decrypted_cvv)
+    return render_template("user/Billing_Info.html", current_user=current_user, billing_address=billing_address, payment=payment, card_num=decrypted_card_num, postal_code=decrypted_postal_code, cvv=decrypted_cvv, token=token)
 
 
 @route.route('/claims/Step_1/<string:token>', methods=['GET', 'POST'])

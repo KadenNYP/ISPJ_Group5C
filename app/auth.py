@@ -121,15 +121,12 @@ def delete_user():
 @login_required
 def profile():
     has_purchased_plan = db.session.query(Purchase_details).filter_by(email=current_user.email).first() is not None
-
-    has_billing_info = db.session.query(BillingAddress).filter_by(email=current_user.email).first() is not None
-    has_payment_info = db.session.query(Payment).filter_by(email=current_user.email).first() is not None
-    has_complete_info = has_billing_info and has_payment_info
     has_claim_info = db.session.query(ClaimID).filter_by(email=current_user.email).first() is not None
 
-    return render_template('user/profile.html', user=current_user, has_purchased_plan=has_purchased_plan, has_billing_info=has_complete_info, has_claim_info=has_claim_info)
+    return render_template('user/profile.html', user=current_user, has_purchased_plan=has_purchased_plan, has_claim_info=has_claim_info)
 
 
+# staff & Admin only Routes
 @auth.route('userdb', methods=["GET", "POST"])
 @login_required
 def userdb():
@@ -168,6 +165,7 @@ def view_billing_address():
     
     return render_template('user/view_billing_address.html', billingaddress_list=billingaddress_list, count=count, mask_email=mask_email)
 
+
 @auth.route('view_claims', methods=["GET", "POST"])
 @login_required
 def view_claims():
@@ -184,6 +182,7 @@ def view_claims():
         count = 0
     
     return render_template('user/view_claims.html', claim_list=claim_list, count=count, mask_email=mask_email)
+
 
 @auth.route('view_claims_info', methods=["GET", "POST"])
 @login_required
@@ -206,6 +205,7 @@ def view_claims_info():
     print(specific_info)
 
     return render_template('user/view_claims_info.html', claim_info=claim_info, general_info=general_info, specific_info=specific_info, mask_email=mask_email)
+
 
 @auth.route('update_claim_status', methods=["GET", "POST"])
 @login_required

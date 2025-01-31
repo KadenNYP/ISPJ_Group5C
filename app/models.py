@@ -61,6 +61,7 @@ class BillingAddress(db.Model):
     updated_at = db.Column(db.TIMESTAMP, server_default=func.current_timestamp(), server_onupdate=func.current_timestamp())
 
     user = db.relationship('User', backref=db.backref('billing_addresses', lazy=True, passive_deletes=True))
+    purchases = db.relationship('Purchase_details', backref='billing_address', lazy=True, passive_deletes=True)
 
     def __init__(self, user_id, fname, email, street_address, city, postal_code, country, created_at):
         self.user_id = user_id
@@ -107,6 +108,7 @@ class Purchase_details(db.Model):
     expiration_date = db.Column(db.DateTime, nullable=False)
     payment_method = db.Column(db.String(50))
     payment_id = db.Column(db.Integer, db.ForeignKey('payments.id', ondelete='CASCADE'), nullable=False)
+    address_id = db.Column(db.Integer, db.ForeignKey('billing_addresses.id', ondelete='CASCADE'), nullable=False)
 
     def __repr__(self):
         return f"<Purchase {self.policy_num} - {self.first_name} - {self.effective_date}>"

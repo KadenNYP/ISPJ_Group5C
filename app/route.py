@@ -296,6 +296,8 @@ def general_info(token):
             flash("Please fill in all required fields and agree to the privacy policy.", "danger")
             return redirect(url_for('route.general_info'))
 
+        time.sleep(1)
+
         claim = Claim_general_info(
             user_id=current_user.id,
             first_name=current_user.first_name,
@@ -332,6 +334,8 @@ def specific_info(token):
         if not hospital_name or not location:
             flash("Please fill in all required fields.", "danger")
             return redirect(url_for('route.specific_info', token=policy_num_token))
+
+        time.sleep(1)
 
         saved_files = {}
 
@@ -411,6 +415,22 @@ def claim_info():
         })
 
     return render_template("user/Claim_Info_list.html", current_user=current_user, claim_lists=claim_lists)
+
+
+@route.route('/specific_claims_info/<string:token>', methods=['GET'])
+@login_required
+def specific_claim_info(token):
+    try:
+        data2 = current_app.serializer.loads(token)
+        claim_num = data2['claim_num']
+    except Exception:
+        abort(400, "Invalid or expired token.")
+
+    claim = ClaimID.query.filter_by(claim_num=claim_num, email=current_user.email).first()
+    claim_general = Claim_general_info.query.filter_by(id=ClaimID.general_id).first()
+    claim_specific = Claim_specific_info.query.filter_by(id=ClaimID.specific_id).first()
+
+    return render_template("user/Claim_Info.html", claim=claim, claim_general=claim_general, claim_specific=claim_specific, token=token)
 
 
 @route.route('/security_features/<path:filename>')

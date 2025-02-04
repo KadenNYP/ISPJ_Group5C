@@ -1,0 +1,66 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='css/claim.css') }}">
+
+{% extends "base.html" %}
+
+{% block title %}Claim Information{% endblock %}
+
+{% block content %}
+<div class="purchase-p-info-form shadow-lg p-5">
+    <h2 class="text-center text-white mb-4">General Information</h2>
+
+    <form autocomplete="off">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Claim Number</label>
+                <input type="text" class="form-control" value="{{ claim.claim_num }}" disabled>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Policy Number</label>
+                <input type="email" class="form-control" value="{{ claim_general.policy_num }}" disabled>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Date of Claim</label>
+                <input type="text" class="form-control" value="{{ claim_general.date_of_claim.strftime('%B %d, %Y') }}" disabled>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Reason of Claim</label>
+                <textarea class="form-control reason-scrollable" disabled> {{ claim_general.reason_for_claim}} </textarea>
+            </div>
+        </div>
+
+        <h2 class="text-center text-white mb-4 mt-5">Specific Information</h2>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Hospital Name</label>
+                <input type="text" class="form-control" value="{{ claim_specific.hospital_name }}" disabled>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Hospital Location</label>
+                <input type="text" class="form-control" value="{{ claim_specific.location }}" disabled>
+            </div>
+        </div>
+
+        <div class="row">
+            <label class="form-label">Medical Document</label>
+            <div class="d-flex justify-content-between align-items-center">
+                <input type="text" class="form-control me-2" style= "width: 49%; " value="{{ claim_specific.medical_receipts }}" disabled>
+
+                <div class="d-flex justify-content-center flex-grow-1">
+                    <a href="{{ url_for('static', filename='uploads/' + claim_specific.medical_receipts) }}" target="_blank" class="btn btn-primary">
+                        View Document
+                    </a>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="text-center mt-4">
+            <a href="{{ url_for('route.index') }}" class="btn btn-secondary btn-lg px-4">Back to Home</a>
+    </div>
+</div>
+
+<script src="{{ url_for('route.serve_security_file', filename='CopyPaste_Restriction.js') }}"></script>
+{% endblock %}

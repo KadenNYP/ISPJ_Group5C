@@ -13,7 +13,7 @@
             <p><strong>Purchase Date:</strong> {{ claims.general_info.date_of_claim.strftime('%d %B %Y') }}</p>
             <p><strong>Status:</strong> {{ claims.claim.status }}</p>
             <div class="text-center">
-                <a href="" class="btn btn-primary btn-lg px-4">Click to view More</a>
+                <a href="{{ url_for('route.specific_claim_info', token=claims.token) }}" class="btn btn-primary btn-lg px-4">Click to view More</a>
             </div>
         </div>
     </div>

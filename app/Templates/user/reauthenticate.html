@@ -1,0 +1,16 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='css/userdb.css') }}">
+
+{% extends 'base.html' %}
+{% block content %}
+<div class="userdb-container">
+    <h2 class="text-center text-white">Reauthenticate</h2>
+    <p class="text-center text-white">Please enter your password to continue.</p>
+    <form method="POST">
+        <div class="mb-3">
+            <label for="password" class="form-label text-white">Password</label>
+            <input type="password" class="form-control" name="password" required>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Verify</button>
+    </form>
+</div>
+{% endblock %}

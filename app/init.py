@@ -1,8 +1,9 @@
-from flask import Flask
+from flask import Flask, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from itsdangerous import URLSafeSerializer
 import os
+from datetime import datetime, timedelta
 
 
 db = SQLAlchemy()
@@ -14,7 +15,7 @@ def create_app():
     app.config['SESSION_COOKIE_SECURE'] = True
     app.config['SESSION_COOKIE_HTTPONLY'] = True
     app.serializer = URLSafeSerializer(app.config['SECRET_KEY'])
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://website:password123@localhost/website'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:password123@localhost/website'
 
     basedir = os.path.abspath(os.path.dirname(__file__))
     app.config['UPLOAD_FOLDER'] = os.path.join(basedir, 'static/uploads')

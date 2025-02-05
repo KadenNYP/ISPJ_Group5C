@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request
+from flask import Blueprint, render_template, redirect, url_for, flash, request, session
 from flask_login import login_user, login_required, logout_user, current_user
 from .models import *
 from app.Security_Features_Function.Encryption import *
@@ -6,6 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
 from .init import db
 import re
+
 
 auth = Blueprint('auth', __name__)
 
@@ -22,6 +23,25 @@ def mask_email(email):
     parts = email.split('@')
     masked_email = parts[0][0] + '***' + '@' + parts[1]
     return masked_email
+
+def require_reauth():
+    t = datetime.now()
+    print(t)
+
+    if 'reauth_time' in session:
+        reauth_time = session.get('reauth_time').strftime("%Y-%m-%d %H:%M:%S")
+        if isinstance(reauth_time, str):
+            reauth_time = datetime.strptime(reauth_time, "%Y-%m-%d %H:%M:%S")
+        print(reauth_time)
+
+    if t <= reauth_time:
+        return None
+    
+    session['next'] = request.url
+    flash("Please re-enter your password for security verification.", "warning")
+    return redirect(url_for('auth.reauthenticate'))
+    
+    
 
 @auth.route('signup', methods=["GET", "POST"])
 def signup():
@@ -81,6 +101,7 @@ def login():
                 db.session.commit()
                 flash('Logged in successfully!', category='success')
                 login_user(user, remember=True)
+                session['reauth_time'] = (datetime.now() - timedelta(seconds=3)).strftime("%Y-%m-%d %H:%M:%S")
                 return redirect(url_for('route.index'))
             else:
                 # Increment failed login attempts
@@ -127,6 +148,25 @@ def profile():
 
 
 # staff & Admin only Routes
+@auth.route('reauthenticate', methods=["GET", "POST"])
+@login_required
+def reauthenticate():
+
+    first_name = current_user.first_name
+    last_name = current_user.last_name
+
+    if request.method == 'POST':
+        password = request.form.get('password')
+        if check_password_hash(current_user.password, password):
+            session['reauth_time'] = datetime.now() + timedelta(seconds=5)
+            print(session['reauth_time'])
+            flash('Reauthenticated successfully.', 'success')
+            next_page = session.pop('next', url_for('auth.userdb'))  # Default to 'userdb' if no previous page was saved
+            return redirect(next_page)
+        else:
+            flash('Incorrect password.', 'error')
+    return render_template('user/reauthenticate.html', first_name=first_name, last_name=last_name)
+
 @auth.route('userdb', methods=["GET", "POST"])
 @login_required
 def userdb():
@@ -149,6 +189,10 @@ def userdb():
 @auth.route('view_billing_address', methods=["GET", "POST"])
 @login_required
 def view_billing_address():
+
+    if require_reauth():
+        return require_reauth()
+    
     user_id = request.args.get('user_id', 0)
     print(user_id)
 
@@ -187,6 +231,9 @@ def view_claims():
 @auth.route('view_claims_info', methods=["GET", "POST"])
 @login_required
 def view_claims_info():
+    if require_reauth():
+        return require_reauth()
+    
     claim_id = request.args.get('claim_id', 0)
     general_id = request.args.get('general_id', 0)
     specific_id = request.args.get('specific_id', 0)

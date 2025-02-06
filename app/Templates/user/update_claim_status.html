@@ -1,0 +1,31 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='css/userdb.css') }}">
+
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Claim Details -->
+
+<div class="userdb-container shadow-lg p-5">
+    <h2 class="text-center text-white">Update Claim Status</h2>
+    <div class="mb-4 p-3 bg-dark text-white rounded">
+        <h4>Claim Information</h4>
+        <p><strong>Claim ID:</strong> {{ claim_info.id }}</p>
+        <p><strong>User ID:</strong> {{ general_info.user_id }}</p>
+        <p><strong>First Name:</strong> {{ general_info.first_name }}</p>
+        <p><strong>Email:</strong> {{ general_info.email }}</p>
+        <p><strong>Policy Number:</strong> {{ general_info.policy_num }}</p>
+        <p><strong>Reason for Claim:</strong> {{ general_info.reason_for_claim }}</p>
+        <p><strong>Status:</strong> {{ claim_info.status }}</p>
+    </div>
+    <form method="POST">
+        <div class="mb-3">
+            <label for="status" class="form-label text-white">Status</label>
+            <select class="form-select" name="status" required>
+                <option value="In Progress" {% if claim_info.status == 'In Progress' %} selected {% endif %}>In Progress</option>
+                <option value="Approved" {% if claim_info.status == 'Approved' %} selected {% endif %}>Approved</option>
+                <option value="Rejected" {% if claim_info.status == 'Rejected' %} selected {% endif %}>Rejected</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Update</button>
+
+{% endblock %}

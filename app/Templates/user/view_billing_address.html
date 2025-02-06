@@ -40,7 +40,7 @@
                         <td>{{ row.fname }}</td>
                         <td>{{ row.email }}</td>
                         <td>{{ row.street_address+", " }}<br>{{ row.country }}</td>
-                        <td>{{ row.postal_code }}</td>
+                        <td>{{ decrypt_db_data(row.postal_code, row.email) }}</td>
                         <td>{{ row.country }}</td>
                         <td>
                             <!-- Update Button -->

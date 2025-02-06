@@ -1,10 +1,11 @@
 import pymysql
 from werkzeug.security import generate_password_hash
-from Security_Features_Function.Encryption import *
+from cryptography.fernet import Fernet
+
+
 
 mydb = None
 my_cursor = None
-encryption_key = Fernet.generate_key().decode()
 insert_user_query = '''INSERT INTO user (role_id, first_name, last_name, email, password, encryption_key) VALUES (%s, %s, %s, %s, %s, %s)'''
 default_hashed_password = generate_password_hash("12345678", method='pbkdf2:sha256')
 default_owner = ('1', 'owner', 'account', 'owner@owner.owner' , default_hashed_password, Fernet.generate_key().decode())
@@ -45,11 +46,30 @@ try:
     #delete the billing_addresses table data
     my_cursor.execute("delete from billing_addresses")
 
+    def encrypt_data(data, encryption_key):
+
+        EKey = encryption_key
+
+        if EKey:
+            cipher_suite = Fernet(EKey)
+            cipher_text = cipher_suite.encrypt(data.encode())
+            return cipher_text
+        
+    # Query encryption keys for each user
+    my_cursor.execute("SELECT id, encryption_key FROM user WHERE email = 'owner@owner.owner'")
+    owner_encryption_key = my_cursor.fetchone()[1]
+
+    my_cursor.execute("SELECT id, encryption_key FROM user WHERE email = 'staff@staff.staff'")
+    staff_encryption_key = my_cursor.fetchone()[1]
+
+    my_cursor.execute("SELECT id, encryption_key FROM user WHERE email = 'customer@customer.customer'")
+    customer_encryption_key = my_cursor.fetchone()[1]
+
     # Insert billing addresses for the three users
     billing_addresses = [
-        (1, "Owner", "owner@owner.owner", "123 Owner St", "OwnerCity", "10001", "OwnerCountry", '2025-01-01 00:00:00'),
-        (2, "Staff", "staff@staff.staff", "456 Staff Ave", "StaffCity", "20002", "StaffCountry", '2025-01-01 00:00:00'),
-        (3, "Customer", "customer@customer.customer", "789 Customer Blvd", "CustomerCity", "30003", "CustomerCountry", '2025-01-01 00:00:00')
+        (1, "Owner", "owner@owner.owner", "123 Owner St", "OwnerCity", encrypt_data("10001", owner_encryption_key), "OwnerCountry", '2025-01-01 00:00:00'),
+        (2, "Staff", "staff@staff.staff", "456 Staff Ave", "StaffCity", encrypt_data("20002", staff_encryption_key), "StaffCountry", '2025-01-01 00:00:00'),
+        (3, "Customer", "customer@customer.customer", "789 Customer Blvd", "CustomerCity", encrypt_data("30003", customer_encryption_key), "CustomerCountry", '2025-01-01 00:00:00')
     ]
 
     insert_billing_query = """

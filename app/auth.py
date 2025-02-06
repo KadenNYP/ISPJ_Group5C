@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, session
 from flask_login import login_user, login_required, logout_user, current_user
 from .models import *
-from app.Security_Features_Function.Encryption import *
+from cryptography.fernet import Fernet
 from werkzeug.security import generate_password_hash, check_password_hash 
 from datetime import datetime, timedelta
 from .init import db
@@ -24,20 +24,42 @@ def mask_email(email):
     masked_email = parts[0][0] + '***' + '@' + parts[1]
     return masked_email
 
+def decrypt_db_data(data, email):
+    user = User.query.filter_by(email=email).first()
+    if user and user.encryption_Key:
+        cipher_suite = Fernet(user.encryption_Key)
+        plain_text = cipher_suite.decrypt(data).decode()
+        return plain_text
+
+    return data
+
 def require_reauth():
-    t = datetime.now()
+    t = datetime.now().replace(tzinfo=None)
     print(t)
 
+    try:
+        print(f'{session.get('reauth_time')}, session["reauth_time"] has a value')
+    except:
+        session['reauth_time'] = (datetime.now() - timedelta(seconds=3))
+        print(f'{session['reauth_time']}, session["reauth_time"] does not have a value')
     if 'reauth_time' in session:
-        reauth_time = session.get('reauth_time').strftime("%Y-%m-%d %H:%M:%S")
-        if isinstance(reauth_time, str):
-            reauth_time = datetime.strptime(reauth_time, "%Y-%m-%d %H:%M:%S")
-        print(reauth_time)
+        reauth_time_str = session.get('reauth_time')
+        if isinstance(reauth_time_str, str):
+            reauth_time = datetime.strptime(reauth_time_str, "%Y-%m-%d %H:%M:%S").replace(tzinfo=None)
+        else:
+            reauth_time = reauth_time_str.replace(tzinfo=None)
+            print(f'reauth_time_str is not a string')
+
+    if 'next' not in session:
+        print(request.url)
+        session['next'] = request.url
+        print(f'next is not in session, setting next to {request.url}')
+    else:
+        print(f'next is in session, next is {session["next"]}')
 
     if t <= reauth_time:
         return None
     
-    session['next'] = request.url
     flash("Please re-enter your password for security verification.", "warning")
     return redirect(url_for('auth.reauthenticate'))
     
@@ -161,11 +183,12 @@ def reauthenticate():
             session['reauth_time'] = datetime.now() + timedelta(seconds=5)
             print(session['reauth_time'])
             flash('Reauthenticated successfully.', 'success')
+
             next_page = session.pop('next', url_for('auth.userdb'))  # Default to 'userdb' if no previous page was saved
             return redirect(next_page)
         else:
             flash('Incorrect password.', 'error')
-    return render_template('user/reauthenticate.html', first_name=first_name, last_name=last_name)
+    return render_template('user/reauthenticate.html')
 
 @auth.route('userdb', methods=["GET", "POST"])
 @login_required
@@ -189,6 +212,8 @@ def userdb():
 @auth.route('view_billing_address', methods=["GET", "POST"])
 @login_required
 def view_billing_address():
+    if 'next' in session:
+        session.pop('next')
 
     if require_reauth():
         return require_reauth()
@@ -207,7 +232,7 @@ def view_billing_address():
     except:
         count = 0
     
-    return render_template('user/view_billing_address.html', billingaddress_list=billingaddress_list, count=count, mask_email=mask_email)
+    return render_template('user/view_billing_address.html', billingaddress_list=billingaddress_list, count=count, mask_email=mask_email, decrypt_db_data=decrypt_db_data)
 
 
 @auth.route('view_claims', methods=["GET", "POST"])
@@ -231,6 +256,9 @@ def view_claims():
 @auth.route('view_claims_info', methods=["GET", "POST"])
 @login_required
 def view_claims_info():
+    if 'next' in session:
+        session.pop('next')
+
     if require_reauth():
         return require_reauth()
     
@@ -243,26 +271,37 @@ def view_claims_info():
     print(f'specific_id is {specific_id}')
 
     claim_info = ClaimID.query.filter(ClaimID.id == claim_id).first()
-    general_info = Claim_general_info.query.filter(ClaimID.id == general_id).first()
-    specific_info = Claim_specific_info.query.filter(ClaimID.id == specific_id).first()
+    general_info = Claim_general_info.query.filter(Claim_general_info.id == general_id).first()
+    specific_info = Claim_specific_info.query.filter(Claim_specific_info.id == specific_id).first()
     
     print(claim_info)
     print(f'claim status is "{claim_info.status}"')
     print(general_info)
     print(specific_info)
 
-    return render_template('user/view_claims_info.html', claim_info=claim_info, general_info=general_info, specific_info=specific_info, mask_email=mask_email)
+    return render_template('user/view_claims_info.html', claim_info=claim_info, general_info=general_info, specific_info=specific_info, mask_email=mask_email, decrypt_db_data=decrypt_db_data)
 
 
 @auth.route('update_claim_status', methods=["GET", "POST"])
 @login_required
 def update_claim_status():
+    if 'next' in session:
+        session.pop('next')
+
+    if require_reauth():
+        return require_reauth()
+    
     claim_id = request.args.get('claim_id', 0)
-    status = request.args.get('status', 'In Progress')
-
     claim_info = ClaimID.query.filter(ClaimID.id == claim_id).first()
-    claim_info.status = status
+    general_info = Claim_general_info.query.filter(Claim_general_info.id == claim_info.general_id).first()
+    specific_info = Claim_specific_info.query.filter(Claim_specific_info.id == claim_info.specific_id).first()
 
-    db.session.commit()
+    if request.method == 'POST':
+        status = request.form.get('status')
+        claim_info.status = status
+        db.session.commit()
 
-    return redirect(url_for('auth.view_claims_info', claim_id=claim_id, general_id=claim_info.general_id, specific_id=claim_info.specific_id))
+        flash(f'Claim status updated to "{claim_info.status}"!', category='success')
+        return redirect(url_for('auth.view_claims_info', claim_id=claim_info.id, general_id=general_info.id, specific_id=specific_info.id))
+
+    return render_template('user/update_claim_status.html', claim_info=claim_info, general_info=general_info, specific_info=specific_info)

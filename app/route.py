@@ -118,7 +118,7 @@ def personal_info(plan_id):
 
             time.sleep(1)
 
-            encrypted_postal_code = encrypt_data(postal_code)
+            encrypted_postal_code = encrypt_data(postal_code, current_user.id)
 
             billing_address = BillingAddress(user_id=current_user.id, fname=current_user.first_name, email=current_user.email, street_address=street_address, city=city, postal_code=encrypted_postal_code, country=country, created_at=func.current_timestamp())
 
@@ -158,8 +158,8 @@ def payment_info(plan_id):
 
             time.sleep(5)
 
-            encrypted_cvv = encrypt_data(cvv)
-            encrypted_card_num = encrypt_data(card_number)
+            encrypted_cvv = encrypt_data(cvv, current_user.id)
+            encrypted_card_num = encrypt_data(card_number, current_user.id)
 
             payment = Payment(user_id=current_user.id, fname=current_user.first_name, email=current_user.email, cardholder_name=cardholder_name, card_number=encrypted_card_num, expiration_date=expiration_date, cvv=encrypted_cvv, created_at=func.current_timestamp())
 

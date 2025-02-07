@@ -1,11 +1,10 @@
 from cryptography.fernet import Fernet
 
 
-def encrypt_data(data):
+def encrypt_data(data, user_id):
     from app.models import User
-    from app.route import current_user
 
-    EKey = User.query.filter_by(email=current_user.email).first()
+    EKey = User.query.filter_by(id=user_id).first()
 
     if EKey and EKey.encryption_Key:
         cipher_suite = Fernet(EKey.encryption_Key)
@@ -13,11 +12,10 @@ def encrypt_data(data):
         return cipher_text
 
 
-def decrypt_data(encrypted_data):
+def decrypt_data(encrypted_data, user_id):
     from app.models import User
-    from app.route import current_user
 
-    EKey = User.query.filter_by(email=current_user.email).first()
+    EKey = User.query.filter_by(id=user_id).first()
 
     if EKey and EKey.encryption_Key:
         cipher_suite = Fernet(EKey.encryption_Key)

@@ -3,6 +3,7 @@ from flask_login import login_user, login_required, logout_user, current_user
 from .models import *
 from cryptography.fernet import Fernet
 from werkzeug.security import generate_password_hash, check_password_hash 
+from .Security_Features_Function.Encryption import encrypt_data, decrypt_data
 from datetime import datetime, timedelta
 from .init import db
 import re
@@ -24,24 +25,19 @@ def mask_email(email):
     masked_email = parts[0][0] + '***' + '@' + parts[1]
     return masked_email
 
-def decrypt_db_data(data, email):
-    user = User.query.filter_by(email=email).first()
-    if user and user.encryption_Key:
-        cipher_suite = Fernet(user.encryption_Key)
-        plain_text = cipher_suite.decrypt(data).decode()
-        return plain_text
-
-    return data
-
 def require_reauth():
     t = datetime.now().replace(tzinfo=None)
     print(t)
 
     try:
         print(f'{session.get('reauth_time')}, session["reauth_time"] has a value')
+        if session.get("reauth_time") == None:
+            session['reauth_time'] = (datetime.now() - timedelta(seconds=3))
+            print(f'{session.get('reauth_time')}, session["reauth_time"] was a None value')
     except:
         session['reauth_time'] = (datetime.now() - timedelta(seconds=3))
         print(f'{session['reauth_time']}, session["reauth_time"] does not have a value')
+
     if 'reauth_time' in session:
         reauth_time_str = session.get('reauth_time')
         if isinstance(reauth_time_str, str):
@@ -232,7 +228,7 @@ def view_billing_address():
     except:
         count = 0
     
-    return render_template('user/view_billing_address.html', billingaddress_list=billingaddress_list, count=count, mask_email=mask_email, decrypt_db_data=decrypt_db_data)
+    return render_template('user/view_billing_address.html', billingaddress_list=billingaddress_list, count=count, mask_email=mask_email, decrypt_data=decrypt_data)
 
 
 @auth.route('view_claims', methods=["GET", "POST"])
@@ -279,7 +275,7 @@ def view_claims_info():
     print(general_info)
     print(specific_info)
 
-    return render_template('user/view_claims_info.html', claim_info=claim_info, general_info=general_info, specific_info=specific_info, mask_email=mask_email, decrypt_db_data=decrypt_db_data)
+    return render_template('user/view_claims_info.html', claim_info=claim_info, general_info=general_info, specific_info=specific_info, mask_email=mask_email)
 
 
 @auth.route('update_claim_status', methods=["GET", "POST"])

@@ -271,9 +271,9 @@ def billing_info(token):
     billing_address = BillingAddress.query.filter_by(id=purchase_details.address_id).first()
     payment = Payment.query.filter_by(id=purchase_details.payment_id).first()
 
-    decrypted_postal_code = decrypt_data(billing_address.postal_code)
-    decrypted_cvv = decrypt_data(payment.cvv)
-    decrypted_card_num = decrypt_data(payment.card_number)
+    decrypted_postal_code = decrypt_data(billing_address.postal_code, current_user.id)
+    decrypted_cvv = decrypt_data(payment.cvv, current_user.id)
+    decrypted_card_num = decrypt_data(payment.card_number, current_user.id)
 
     return render_template("user/Billing_Info.html", current_user=current_user, billing_address=billing_address, payment=payment, card_num=decrypted_card_num, postal_code=decrypted_postal_code, cvv=decrypted_cvv, token=token)
 

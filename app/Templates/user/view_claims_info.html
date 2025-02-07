@@ -78,7 +78,7 @@
                     <th>Medical Receipts</th>
                     <td class="claim-link">
                         {% if specific_info.medical_receipts %}
-                            <a href="{{ url_for('static', filename='receipts/' + specific_info.medical_receipts) }}" target="_blank">View Receipt</a>
+                            <a href="{{ url_for('static', filename='uploads/' + specific_info.medical_receipts) }}" target="_blank">View Receipt</a>
                         {% else %}
                             N/A
                         {% endif %}

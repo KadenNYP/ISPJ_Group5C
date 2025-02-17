@@ -275,7 +275,10 @@ def view_claims_info():
     print(general_info)
     print(specific_info)
 
-    return render_template('user/view_claims_info.html', claim_info=claim_info, general_info=general_info, specific_info=specific_info, mask_email=mask_email)
+    medical_documents = MedicalDocument.query.filter_by(user_id=claim_info.id)\
+        .order_by(MedicalDocument.upload_date.desc()).all()
+
+    return render_template('user/view_claims_info.html', claim_info=claim_info, general_info=general_info, specific_info=specific_info, mask_email=mask_email, medical_documents=medical_documents)
 
 
 @auth.route('update_claim_status', methods=["GET", "POST"])

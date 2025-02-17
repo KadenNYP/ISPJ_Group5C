@@ -4,6 +4,7 @@ from flask import abort, current_app, send_file
 from flask_login import login_required
 from werkzeug.utils import secure_filename
 from io import BytesIO
+from .Security_Features_Function.document_security import check_document_access, get_document_expiry
 from .Security_Features_Function.Encryption import encrypt_data, decrypt_data
 from .Security_Features_Function.Contact_Anonymization import anonymize_old_records
 from .payment_utils import determine_plan_details, extract_payment_method
@@ -476,13 +477,23 @@ def upload_medical_document():
             
             # Validate classification result
             if document_class not in MedicalDocument.CLASSIFICATION_TYPES:
-                document_class = 'PUBLIC'  # Default if classification fails
+                document_class = 'CONFIDENTIAL'
+            
+            # Encrypt sensitive documents
+            if document_class in ['CONFIDENTIAL', 'RESTRICTED']:
+                try:
+                    file_data = encrypt_data(file_data, current_user.id)
+                except Exception as encrypt_error:
+                    print(f"Encryption error: {encrypt_error}")
+                    flash('Error encrypting document', 'danger')
+                    return redirect(request.referrer)
             
             doc = MedicalDocument(
                 user_id=current_user.id,
                 filename=secure_filename(file.filename),
                 file_data=file_data,
-                document_type=document_class
+                document_type=document_class,
+                expiry_date=get_document_expiry(document_class)
             )
             
             db.session.add(doc)
@@ -491,7 +502,8 @@ def upload_medical_document():
             flash(f'Document uploaded successfully and classified as {document_class}', 'success')
         except Exception as e:
             db.session.rollback()
-            flash('Error uploading document', 'danger')
+            flash('Error uploading document', 'error')
+            print(f"Upload error: {str(e)}")
         finally:
             # Clean up temporary file
             if os.path.exists(temp_path):
@@ -500,27 +512,42 @@ def upload_medical_document():
         return redirect(url_for('route.upload_medical_document'))
 
     # GET request - show upload form
+    current_time = datetime.now()
     medical_documents = MedicalDocument.query.filter_by(user_id=current_user.id)\
         .order_by(MedicalDocument.upload_date.desc()).all()
-    return render_template('Login-home/Upload_Documents.html', medical_documents=medical_documents)
+    return render_template('Login-home/Upload_Documents.html', medical_documents=medical_documents, current_time=current_time)
 
 
 @route.route('/view_medical_document/<int:doc_id>')
 @login_required
 def view_medical_document(doc_id):
     doc = MedicalDocument.query.get_or_404(doc_id)
-
-    if require_reauth():
-        return require_reauth()
     
-    # Verify user owns document
-    if doc.user_id != current_user.id:
-        abort(403)
-
-        
-    return send_file(
-        BytesIO(doc.file_data),
+    # Check expiration
+    if doc.expiry_date and doc.expiry_date < datetime.now():
+        flash("This document has expired.", "danger")
+        return redirect(url_for('route.upload_medical_document'))
+    
+    # Update access tracking
+    doc.last_accessed = datetime.now()
+    doc.access_count += 1
+    db.session.commit()
+    
+    # Decrypt if necessary
+    file_data = doc.file_data
+    if doc.document_type in ['CONFIDENTIAL', 'RESTRICTED']:
+        file_data = decrypt_data(file_data, current_user.id)
+    
+    response = send_file(
+        BytesIO(file_data),
         mimetype='application/pdf',
         as_attachment=True,
         download_name=doc.filename
     )
+    
+    # Add security headers
+    response.headers['Content-Disposition'] = 'inline'
+    response.headers['X-Frame-Options'] = 'DENY'
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    
+    return response

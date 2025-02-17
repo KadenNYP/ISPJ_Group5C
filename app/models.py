@@ -169,5 +169,8 @@ class MedicalDocument(db.Model):
     file_data = db.Column(db.LargeBinary, nullable=False)
     upload_date = db.Column(db.DateTime, default=datetime.now)
     document_type = db.Column(db.Enum(*CLASSIFICATION_TYPES, name='document_classification'), nullable=False, default='CONFIDENTIAL')
+    expiry_date = db.Column(db.DateTime)
+    last_accessed = db.Column(db.DateTime)
+    access_count = db.Column(db.Integer, default=0)
     
     user = db.relationship('User', backref='medical_documents')

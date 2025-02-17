@@ -8,7 +8,10 @@ def encrypt_data(data, user_id):
 
     if EKey and EKey.encryption_Key:
         cipher_suite = Fernet(EKey.encryption_Key)
-        cipher_text = cipher_suite.encrypt(data.encode())
+        # Only encode if data is not already bytes
+        if not isinstance(data, bytes):
+            data = data.encode()
+        cipher_text = cipher_suite.encrypt(data)
         return cipher_text
 
 
@@ -19,6 +22,9 @@ def decrypt_data(encrypted_data, user_id):
 
     if EKey and EKey.encryption_Key:
         cipher_suite = Fernet(EKey.encryption_Key)
-        plain_text = cipher_suite.decrypt(encrypted_data).decode()
-        return plain_text
+        decrypted_data = cipher_suite.decrypt(encrypted_data)
+        # Only decode if we want string output
+        if not isinstance(encrypted_data, bytes):
+            return decrypted_data.decode()
+        return decrypted_data
 

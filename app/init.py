@@ -39,6 +39,8 @@ def create_app():
             db.session.add(Role(name='Staff'))
         if not Role.query.filter_by(name='Customer').first():
             db.session.add(Role(name='Customer'))
+        if not Role.query.filter_by(name='Admin').first():
+            db.session.add(Role(name='Admin'))
         db.session.commit()
 
     login_manager = LoginManager()

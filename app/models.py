@@ -25,12 +25,12 @@ class User(db.Model, UserMixin):
     updated_at = db.Column(db.TIMESTAMP, server_default=func.current_timestamp(), server_onupdate=func.current_timestamp())
     encryption_Key = db.Column(db.String(200), nullable=True)
 
-    def __init__(self, first_name, last_name, email, password, role, encryption_key):
+    def __init__(self, first_name, last_name, email, password, role_id, encryption_key):
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
         self.password = password
-        self.role = role
+        self.role_id = role_id
         self.encryption_Key = encryption_key
 
 

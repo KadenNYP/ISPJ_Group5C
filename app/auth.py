@@ -1,3 +1,4 @@
+from calendar import c
 from flask import Blueprint, render_template, redirect, url_for, flash, request, session
 from flask_login import login_user, login_required, logout_user, current_user
 from .models import *
@@ -64,40 +65,105 @@ def require_reauth():
 @auth.route('signup', methods=["GET", "POST"])
 def signup():
     if request.method == 'POST':
+        try:
+            first_name = request.form.get('first_name')
+            last_name = request.form.get('last_name')
+            email = request.form.get('email')
+            password = request.form.get('password')
+            confirm_password = request.form.get('confirm_password')
+            
+            # Debugging
+            print(f"Signup form data: first_name={first_name}, last_name={last_name}, email={email}")
+
+            # Generate encryption key
+            encryption_key = Fernet.generate_key().decode()
+
+            # Check existing user
+            user = User.query.filter_by(email=email).first()
+
+            # Validate inputs
+            if user:
+                flash('Email already exists.', category='error')
+            elif not is_valid_email(email):
+                flash('Invalid email address.', category='error')
+            elif password != confirm_password:
+                flash('Passwords do not match.', category='error')
+            else:
+                # Get customer role
+                customer_role = Role.query.filter_by(name='Customer').first()
+                if not customer_role:
+                    flash('Error setting up account role.', category='error')
+                    return redirect(url_for('auth.signup'))
+
+                # Create user with role relationship
+                hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
+                user = User(
+                    first_name=first_name,
+                    last_name=last_name,
+                    email=email,
+                    password=hashed_password,
+                    role_id=3,
+                    encryption_key=encryption_key
+                )
+                
+                db.session.add(user)
+                db.session.commit()
+
+                login_user(user, remember=True)
+                flash('Account created!', category='success')
+                return redirect(url_for('route.index'))
+
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error in signup: {str(e)}")
+            flash('Error creating account. Please try again.', category='error')
+
+    return render_template('user/signup.html')
+
+@auth.route('/add_staff', methods=['POST'])
+@login_required
+def add_staff():
+    # Verify user is owner
+    if current_user.role.name != 'Owner':
+        flash('Unauthorized access', 'danger')
+        return redirect(url_for('route.index'))
+        
+    try:
+        # Get form data
         first_name = request.form.get('first_name')
         last_name = request.form.get('last_name')
         email = request.form.get('email')
         password = request.form.get('password')
-        confirm_password = request.form.get('confirm_password')
-        role_name = request.form.get('role')
-        
-        # Debugging
-        print(f"Signup form data: first_name={first_name}, last_name={last_name}, email={email}, password={password}, confirm_password={confirm_password}")
-
+        role_name = request.form.get('role_name')
         encryption_key = Fernet.generate_key().decode()
-
-        user = User.query.filter_by(email=email).first()
-
-        # Check if the email already exists
-        if user:
-            flash('Email already exists.', category='error')
-        elif is_valid_email(email) == False:
-            flash('Invalid email address.', category='error')
-        elif password != confirm_password:
-            flash('Passwords do not match.', category='error')
-        else:
-            role = Role.query.filter_by(name=role_name).first()
-            hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
-            user = User(first_name=first_name, last_name=last_name, email=email, password=hashed_password, role=role, encryption_key=encryption_key)
-            db.session.add(user)
-            db.session.commit()
-
-            login_user(user, remember=True)
-            flash('Account created!', category='success')
+        
+        # Get role
+        role = Role.query.filter_by(name=role_name).first()
+        if not role:
+            flash('Invalid role selected', 'danger')
             return redirect(url_for('route.index'))
-
-    return render_template('user/signup.html')
-
+            
+        # Create new user
+        new_staff = User(
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            password=generate_password_hash(password, method='pbkdf2:sha256'),
+            role_id=role.id,
+            encryption_key=encryption_key
+        )
+        
+        db.session.add(new_staff)
+        db.session.commit()
+        
+        flash(f'Staff member {first_name} {last_name} added successfully', 'success')
+        
+    except Exception as e:
+        db.session.rollback()
+        flash('Error adding staff member', 'danger')
+        print(f"Error adding staff: {str(e)}")
+        
+    return redirect(url_for('route.index'))
 
 @auth.route('login', methods=["GET", "POST"])
 def login():
@@ -275,10 +341,11 @@ def view_claims_info():
     print(general_info)
     print(specific_info)
 
+    current_time=datetime.now()
     medical_documents = MedicalDocument.query.filter_by(user_id=claim_info.id)\
         .order_by(MedicalDocument.upload_date.desc()).all()
 
-    return render_template('user/view_claims_info.html', claim_info=claim_info, general_info=general_info, specific_info=specific_info, mask_email=mask_email, medical_documents=medical_documents)
+    return render_template('user/view_claims_info.html', claim_info=claim_info, general_info=general_info, specific_info=specific_info, mask_email=mask_email, medical_documents=medical_documents, current_time=current_time)
 
 
 @auth.route('update_claim_status', methods=["GET", "POST"])

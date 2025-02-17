@@ -16,6 +16,14 @@
                 <li class="nav-item">
                     <a class="nav-link text-white px-3 fs-5" href="{{ url_for('auth.view_claims') }}">Claims</a>
                 </li>
+                <!-- Add Staff button - only visible to owners -->
+                {% if current_user.role.name == 'Owner' %}
+                <li class="nav-item">
+                    <a class="nav-link text-white px-3 fs-5" href="#" data-bs-toggle="modal" data-bs-target="#addStaffModal">
+                        <i class="bi bi-person-plus"></i> Add Staff
+                    </a>
+                </li>
+                {% endif %}
             </ul>
 
             <ul class="navbar-nav">
@@ -43,3 +51,49 @@
         </div>
     </div>
 </nav>
+
+<!-- Add Staff Modal -->
+{% if current_user.role.name == 'Owner' %}
+<div class="modal fade" id="addStaffModal" tabindex="-1" aria-labelledby="addStaffModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addStaffModalLabel">Add New Staff Member</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{ url_for('auth.add_staff') }}" method="POST">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="first_name" class="form-label">First Name</label>
+                        <input type="text" class="form-control" id="first_name" name="first_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="last_name" class="form-label">Last Name</label>
+                        <input type="text" class="form-control" id="last_name" name="last_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="role_name" class="form-label">Role</label>
+                        <select class="form-select" id="role_name" name="role_name" required>
+                            {% for role_name in ['Staff', 'Admin'] %}
+                            <option value="{{ role_name }}">{{ role_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add Staff</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}

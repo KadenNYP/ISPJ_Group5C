@@ -102,10 +102,18 @@
                                         else 'success' }} me-2">
                         {{ doc.document_type }}
                     </span>
-                    <span class="text-muted me-3">{{ doc.upload_date.strftime('%Y-%m-%d %H:%M') }}</span>
-                    
-                    <a href="{{ url_for('route.view_medical_document', doc_id=doc.id) }}" 
-                       class="btn btn-sm btn-primary">View</a>
+                    <small class="text-muted me-2">
+                        Expires: {{ doc.expiry_date.strftime('%Y-%m-%d') }}
+                    </small>
+                    <small class="text-muted me-2">
+                        Views: {{ doc.access_count }}
+                    </small>
+                    {% if doc.expiry_date > current_time %}
+                        <a href="{{ url_for('route.view_medical_document', doc_id=doc.id) }}" 
+                           class="btn btn-sm btn-primary">View</a>
+                    {% else %}
+                        <span class="badge bg-secondary">Expired</span>
+                    {% endif %}
                 </div>
             </li>
         {% endfor %}

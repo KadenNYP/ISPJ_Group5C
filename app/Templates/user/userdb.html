@@ -16,7 +16,7 @@
             {% endif %}
         </div>
 
-        {% if current_user.role_id == 2 %}
+        {% if current_user.role_id == 2 or current_user.role_id == 4 %}
         <div class="w3-container">
             <h3 class="text-white d-inline">Filter By:</h3>
             <div class="w3-dropdown-content d-inline ms-2 btn-group dropend">

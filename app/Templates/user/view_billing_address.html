@@ -17,7 +17,7 @@
         </div>
     {% else %}    
 
-        {% if current_user.role_id == 2 %}
+        {% if current_user.role_id == 2 or current_user.role_id == 4 %}
         <!-- User Table -->
         <div>
             <table class="table text-white">

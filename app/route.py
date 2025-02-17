@@ -1,22 +1,25 @@
 import time
 from flask import Blueprint, render_template, redirect, url_for, flash, request, session, send_from_directory
-from flask import abort, current_app
+from flask import abort, current_app, send_file
 from flask_login import login_required
 from werkzeug.utils import secure_filename
+from io import BytesIO
 from .Security_Features_Function.Encryption import encrypt_data, decrypt_data
 from .Security_Features_Function.Contact_Anonymization import anonymize_old_records
 from .payment_utils import determine_plan_details, extract_payment_method
 from .models import *
-from .auth import current_user
+from .auth import current_user, require_reauth
 import random
+from .ml_classification.test_ml import predict_document_class
 import os
 from datetime import timedelta, datetime
+
 
 
 route = Blueprint('route', __name__)
 
 ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg'}
-
+ALLOWED_DOCUMENT_EXTENSIONS = {'pdf'}
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -436,3 +439,88 @@ def specific_claim_info(token):
 @route.route('/security_features/<path:filename>')
 def serve_security_file(filename):
     return send_from_directory('Security_Features_Function', filename)
+
+@route.route('/upload_medical_document', methods=['GET', 'POST'])
+@login_required
+def upload_medical_document():
+    if request.method == 'POST':
+        if 'document' not in request.files:
+            flash('No file uploaded', 'danger')
+            return redirect(request.referrer)
+            
+        file = request.files['document']
+        
+        if file.filename == '':
+            flash('No file selected', 'danger')
+            return redirect(request.referrer)
+
+        if not file.filename.lower().endswith('.pdf'):
+            flash('Only PDF files are allowed', 'danger')
+            return redirect(request.referrer)
+            
+        MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB
+        file_data = file.read()
+        if len(file_data) > MAX_FILE_SIZE:
+            flash('File size too large. Maximum size is 5MB', 'danger')
+            return redirect(request.referrer)
+
+        # Save file temporarily for classification
+        temp_path = os.path.join(current_app.config['UPLOAD_FOLDER'], 'temp.pdf')
+        with open(temp_path, 'wb') as f:
+            f.write(file_data)
+
+        try:
+            # Classify document
+            model_path = os.path.join(current_app.root_path, 'ml_classification', 'document_classification_model.joblib')
+            document_class = predict_document_class(temp_path, model_path)
+            
+            # Validate classification result
+            if document_class not in MedicalDocument.CLASSIFICATION_TYPES:
+                document_class = 'PUBLIC'  # Default if classification fails
+            
+            doc = MedicalDocument(
+                user_id=current_user.id,
+                filename=secure_filename(file.filename),
+                file_data=file_data,
+                document_type=document_class
+            )
+            
+            db.session.add(doc)
+            db.session.commit()
+            
+            flash(f'Document uploaded successfully and classified as {document_class}', 'success')
+        except Exception as e:
+            db.session.rollback()
+            flash('Error uploading document', 'danger')
+        finally:
+            # Clean up temporary file
+            if os.path.exists(temp_path):
+                os.remove(temp_path)
+            
+        return redirect(url_for('route.upload_medical_document'))
+
+    # GET request - show upload form
+    medical_documents = MedicalDocument.query.filter_by(user_id=current_user.id)\
+        .order_by(MedicalDocument.upload_date.desc()).all()
+    return render_template('Login-home/Upload_Documents.html', medical_documents=medical_documents)
+
+
+@route.route('/view_medical_document/<int:doc_id>')
+@login_required
+def view_medical_document(doc_id):
+    doc = MedicalDocument.query.get_or_404(doc_id)
+
+    if require_reauth():
+        return require_reauth()
+    
+    # Verify user owns document
+    if doc.user_id != current_user.id:
+        abort(403)
+
+        
+    return send_file(
+        BytesIO(doc.file_data),
+        mimetype='application/pdf',
+        as_attachment=True,
+        download_name=doc.filename
+    )

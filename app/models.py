@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func
 from sqlalchemy.sql import expression
 from .init import db
+from datetime import datetime
 
 
 class Role(db.Model):
@@ -156,3 +157,17 @@ class ClaimID(db.Model):
 
     general_info = db.relationship('Claim_general_info', backref=db.backref('claim_metadata', lazy=True, passive_deletes=True))
     specific_info = db.relationship('Claim_specific_info', backref=db.backref('claim_metadata', lazy=True, passive_deletes=True))
+
+class MedicalDocument(db.Model):
+    __tablename__ = 'medical_documents'
+    
+    CLASSIFICATION_TYPES = ['PUBLIC', 'INTERNAL', 'CONFIDENTIAL', 'RESTRICTED']
+    
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
+    filename = db.Column(db.String(255), nullable=False)
+    file_data = db.Column(db.LargeBinary, nullable=False)
+    upload_date = db.Column(db.DateTime, default=datetime.now)
+    document_type = db.Column(db.Enum(*CLASSIFICATION_TYPES, name='document_classification'), nullable=False, default='CONFIDENTIAL')
+    
+    user = db.relationship('User', backref='medical_documents')

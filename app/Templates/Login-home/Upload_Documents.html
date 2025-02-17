@@ -1,0 +1,42 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='css/userdb.css') }}">
+
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="userdb-container shadow-lg p-5">
+    <h2 class="text-white mb-4">Upload Medical Document</h2>
+
+    <form action="{{ url_for('route.upload_medical_document') }}" method="POST" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="document" class="form-label text-white">Upload Medical Document (PDF only, max 5MB)</label>
+            <input type="file" class="form-control" id="document" name="document" accept=".pdf" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Upload Document</button>
+    </form>
+
+    {% if medical_documents %}
+    <div class="mt-4">
+        <h4 class="text-white">Uploaded Documents</h4>
+        <ul class="list-group">
+        {% for doc in medical_documents %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ doc.filename }}
+                <div>
+                    <span class="badge bg-{{ 'danger' if doc.document_type == 'RESTRICTED' 
+                                        else 'warning' if doc.document_type == 'CONFIDENTIAL'
+                                        else 'info' if doc.document_type == 'INTERNAL'
+                                        else 'success' }} me-2">
+                        {{ doc.document_type }}
+                    </span>
+                    <span class="text-muted me-3">{{ doc.upload_date.strftime('%Y-%m-%d %H:%M') }}</span>
+                    
+                    <a href="{{ url_for('route.view_medical_document', doc_id=doc.id) }}" 
+                       class="btn btn-sm btn-primary">View</a>
+                </div>
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
